@@ -1,9 +1,9 @@
 #!/usr/bin/env python
-
-import logging
-from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponseRedirect
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
+
 from django.shortcuts import render_to_response, render
 from .models import Gallery
 from .utils import render_to_json, missing_keys
@@ -18,7 +18,7 @@ def register(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             new_user = form.save()
-            return HttpResponseRedirect("/books/")
+            return HttpResponseRedirect("/")
     else:
         form = UserCreationForm()
 
@@ -61,3 +61,8 @@ def page(request):
             } for photo in result_page.photo_set.all()
         ]
     }
+
+@login_required
+def userAccount(request):
+    print request.user.get_username()
+    return render_to_response('registration/userAccount.html')

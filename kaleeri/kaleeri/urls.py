@@ -10,4 +10,5 @@ urlpatterns = patterns('',
     url(r'^accounts/', include('allaccess.urls')),
     url(r'^login/$', 'django.contrib.auth.views.login',name="Kaleeri Login"),
     url(r'^register/$', 'gallery.views.register',name="Kaleeri Register"),
+    url(r'^accounts/profile', 'gallery.views.userAccount',name="Kaleeri Profile"),
 )
