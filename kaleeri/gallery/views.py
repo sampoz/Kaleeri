@@ -21,7 +21,7 @@ def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
-            new_user = form.save()
+            form.save()
             return HttpResponseRedirect("/")
     else:
         form = UserCreationForm()
@@ -68,5 +68,5 @@ def page(request):
 
 
 @login_required
-def userAccount(request):
+def user_account(request):
     return render_to_response('registration/userAccount.html', {"user": request.user})
