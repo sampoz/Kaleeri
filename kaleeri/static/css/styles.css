@@ -4,17 +4,13 @@
     padding-top: 1em;
 }
 
-#topic > a {
-    color: #FFF5EE;
+#topic > a, h1 {
+    color: #FFDEAD;
 }
 
 #links {
     float:right;
     border-bottom: 0px;
-}
-
-h1 {
-    color: #FFF5EE;
 }
 
 #footer-text {
