@@ -29,10 +29,11 @@ body {
     padding-bottom: 30px;
 }
 
-#login-form {
+#login-form, #album-form, #base-logged-in {
   max-width: 300px;
   margin: 0 auto;
 }
+
 
 
 #id_username, #id_password, #id_password1, #id_password2 {
