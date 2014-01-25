@@ -12,5 +12,7 @@ urlpatterns = patterns(
     url(r'^register/$', 'gallery.views.register', name="Kaleeri Register"),
     url(r'^profile$', 'gallery.views.user_account', name="Kaleeri Profile"),
     url(r'^album/(\d+)$', 'gallery.views.show_album'),
-    url(r'^album/(\d+)/page/(\d+)$', 'gallery.views.show_page')
+    url(r'^album/(\d+)/page/(\d+)$', 'gallery.views.show_page'),
+    url(r'^album/(\d+)/page/(\d+)', 'gallery.views.show_page'),
+    url(r'^add_album/$', 'gallery.views.add_album'),
 )

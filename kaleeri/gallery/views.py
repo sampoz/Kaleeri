@@ -87,6 +87,14 @@ def show_page(request, album_id, page_num):
         ]
     }
 
+@login_required
+def add_album(request):
+    if request.method == 'GET':
+        return render_to_response('album/create.html')
+    elif request.method == 'POST':
+        a = Album(name=request.POST.album-name)
+        a.save()
+        return render_to_response('/')
 
 @login_required
 def user_account(request):
