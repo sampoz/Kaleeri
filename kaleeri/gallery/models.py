@@ -2,6 +2,7 @@
 
 import django.contrib.auth.models
 from django.db import models
+from django.db.models import Sum
 
 
 class Album(models.Model):
@@ -10,6 +11,12 @@ class Album(models.Model):
     name = models.CharField(max_length=32)
     created_at = models.DateTimeField(auto_now_add=True)
     share_id = models.CharField(max_length=40, blank=True, null=True)
+
+    def get_num_photos(self):
+        return self.albumpage_set.aggregate(Sum('photoset__count'))
+
+    def get_max_photos(self):
+        return self.albumpage_set.aggregate(Sum('layout__num_photos'))
 
     def has_user_access(self, user):
         return user is self.owner

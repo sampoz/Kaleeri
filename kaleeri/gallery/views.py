@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 
 from django.shortcuts import render_to_response, render
 from .models import Album
-from .utils import render_to_json, missing_keys
+from .utils import render_to_json
 
 
 def home(request):
@@ -28,30 +28,43 @@ def register(request):
 
 
 @render_to_json()
-def album(request):
-    if 'album' not in request.GET:
-        logging.info("Request for an album missing album ID parameter")
-
-
-@render_to_json()
-def page(request):
-    missing = missing_keys(request.GET, ('album', 'page'))
-    if not missing:
-        logging.info("Request for a page missing parameter(s): %s", missing)
-        return {"error": "Invalid request"}
-
+def show_album(request, album_id):
     username = request.user.get_username() if request.user.is_authenticated() else "Anonymous"
-    album_id = request.GET['album']
-    page_num = request.GET['page']
 
     try:
-        album = Album.objects.get(id=request.GET['album'])
+        album = Album.objects.get(id=album_id)
     except ObjectDoesNotExist:
-        logging.info("Request for a non-existing album: %s", album_id)
+        logging.info("User %s requested a non-existing album: %s", username, album_id)
         return {"error": "No such album"}
 
     if not album.has_user_access(request.user):
         logging.info("User %s requested album %s without access", username, album.name)
+        return {"error": "Forbidden"}
+
+    return {
+        "parent": album.parent,
+        "owner": album.owner,
+        "name": album.name,
+        "created_at": album.created_at,
+        "share_id": album.share_id,
+        "pages": album.albumpage_set.count(),
+        "photos": album.get_num_photos(),
+        "max_photos": album.get_max_photos()
+    }
+
+
+@render_to_json()
+def show_page(request, album_id, page_num):
+    username = request.user.get_username() if request.user.is_authenticated() else "Anonymous"
+
+    try:
+        album = Album.objects.get(id=album_id)
+    except ObjectDoesNotExist:
+        logging.info("User %s requested a page in a non-existing album: %s", username, album_id)
+        return {"error": "No such album"}
+
+    if not album.has_user_access(request.user):
+        logging.info("User %s requested page from album %s without access", username, album.name)
         return {"error": "Forbidden"}
 
     if not 1 < page_num <= album.albumpage_set.count():
