@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+
+import logging
+from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponseRedirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login
@@ -10,7 +14,7 @@ from .utils import render_to_json, missing_keys
 
 
 def home(request):
-    return render_to_response('index.html')
+    return render_to_response('index.html', {'user': request.user})
 
 
 def register(request):
@@ -61,6 +65,7 @@ def page(request):
             } for photo in result_page.photo_set.all()
         ]
     }
+
 
 @login_required
 def userAccount(request):
