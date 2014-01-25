@@ -21,11 +21,17 @@ class Album(models.Model):
     def has_user_access(self, user):
         return user == self.owner
 
+    def __unicode__(self):
+        return self.name
+
 
 class PageLayout(models.Model):
     name = models.CharField(max_length=32)
     css_class = models.CharField(max_length=32)
     num_photos = models.IntegerField()
+
+    def __unicode__(self):
+        return self.name
 
 
 class AlbumPage(models.Model):
@@ -33,8 +39,12 @@ class AlbumPage(models.Model):
     layout = models.ForeignKey(PageLayout)
     num = models.IntegerField()
 
+    def __unicode__(self):
+        count_ = self.photo_set.count()
+        return "Page %d of album '%s' with %d photo%s" % (self.num, self.album.name, count_, "s" if count_ != 1 else "")
+
     class Meta:
-        ordering = ('num',)
+        ordering = ('album', 'num',)
 
 
 class Photo(models.Model):
@@ -47,5 +57,9 @@ class Photo(models.Model):
     crop_w = models.IntegerField()
     crop_h = models.IntegerField()
 
+    def __unicode__(self):
+        desc = self.caption[:16] + "..." if len(self.caption) > 16 else self.caption
+        return "Photo %d, page %d, album '%s': %s" % (self.num, self.page.num, self.page.album.name, desc)
+
     class Meta:
-        ordering = ('num',)
+        ordering = ('page', 'num',)

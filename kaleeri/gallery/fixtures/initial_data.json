@@ -13,46 +13,183 @@
         }
     },
     {
-        "pk": 1,
-        "model": "gallery.album",
-        "fields": {
-            "owner": 1,
-            "created_at": "2014-01-25T17:37:07.696Z",
-            "share_id": "1",
-            "name": "Testialbumi I",
-            "parent": null
+        "pk":1,
+        "model":"gallery.album",
+        "fields":{
+            "owner":1,
+            "created_at":"2014-01-25T18:32:13.290Z",
+            "share_id":"12345678",
+            "name":"Simple album",
+            "parent":null
         }
     },
     {
-        "pk": 1,
-        "model": "gallery.pagelayout",
-        "fields": {
-            "css_class": "four_page",
-            "num_photos": 4,
-            "name": "Four per page"
+        "pk":2,
+        "model":"gallery.album",
+        "fields":{
+            "owner":1,
+            "created_at":"2014-01-25T18:32:28.260Z",
+            "share_id":"23456789",
+            "name":"Complicated album",
+            "parent":null
         }
     },
     {
-        "pk": 1,
-        "model": "gallery.albumpage",
-        "fields": {
-            "album": 1,
-            "num": 1,
-            "layout": 1
+        "pk":3,
+        "model":"gallery.album",
+        "fields":{
+            "owner":1,
+            "created_at":"2014-01-25T18:32:38.115Z",
+            "share_id":"34567890",
+            "name":"Subalbum",
+            "parent":2
         }
     },
     {
-        "pk": 1,
-        "model": "gallery.photo",
-        "fields": {
-            "url": "http://espeon.co/~shadikka/img/rofl.gif",
-            "crop_h": 350,
-            "crop_x": 0,
-            "caption": "Lorem ipsum <3",
-            "crop_w": 395,
-            "num": 1,
-            "crop_y": 0,
-            "page": 1
+        "pk":1,
+        "model":"gallery.pagelayout",
+        "fields":{
+            "css_class":"layout_fourpage",
+            "num_photos":4,
+            "name":"Four per page"
+        }
+    },
+    {
+        "pk":1,
+        "model":"gallery.albumpage",
+        "fields":{
+            "album":1,
+            "num":1,
+            "layout":1
+        }
+    },
+    {
+        "pk":2,
+        "model":"gallery.albumpage",
+        "fields":{
+            "album":2,
+            "num":1,
+            "layout":1
+        }
+    },
+    {
+        "pk":3,
+        "model":"gallery.albumpage",
+        "fields":{
+            "album":2,
+            "num":2,
+            "layout":1
+        }
+    },
+    {
+        "pk":4,
+        "model":"gallery.albumpage",
+        "fields":{
+            "album":2,
+            "num":3,
+            "layout":1
+        }
+    },
+    {
+        "pk":5,
+        "model":"gallery.albumpage",
+        "fields":{
+            "album":3,
+            "num":1,
+            "layout":1
+        }
+    },
+    {
+        "pk":6,
+        "model":"gallery.albumpage",
+        "fields":{
+            "album":3,
+            "num":2,
+            "layout":1
+        }
+    },
+    {
+        "pk":1,
+        "model":"gallery.photo",
+        "fields":{
+            "url":"http://espeon.co/~shadikka/img/2spooky.gif",
+            "crop_h":169,
+            "crop_x":0,
+            "caption":"The suspense is too much for our protagonist, as he proceeds on his quest to solve the legendary mystery.",
+            "crop_w":300,
+            "num":1,
+            "crop_y":0,
+            "page":1
+        }
+    },
+    {
+        "pk":2,
+        "model":"gallery.photo",
+        "fields":{
+            "url":"http://espeon.co/~shadikka/img/bonkers.png",
+            "crop_h":354,
+            "crop_x":0,
+            "caption":"Primates do not always approve of what's going on.",
+            "crop_w":500,
+            "num":1,
+            "crop_y":0,
+            "page":2
+        }
+    },
+    {
+        "pk":3,
+        "model":"gallery.photo",
+        "fields":{
+            "url":"http://espeon.co/~shadikka/img/rofl.gif",
+            "crop_h":350,
+            "crop_x":0,
+            "caption":"Do not ask.",
+            "crop_w":395,
+            "num":1,
+            "crop_y":0,
+            "page":3
+        }
+    },
+    {
+        "pk":4,
+        "model":"gallery.photo",
+        "fields":{
+            "url":"http://espeon.co/~shadikka/img/wtf.gif",
+            "crop_h":352,
+            "crop_x":0,
+            "caption":"Clefairy is confused!",
+            "crop_w":500,
+            "num":1,
+            "crop_y":0,
+            "page":4
+        }
+    },
+    {
+        "pk":5,
+        "model":"gallery.photo",
+        "fields":{
+            "url":"http://espeon.co/~shadikka/img/eitanaan.gif",
+            "crop_h":252,
+            "crop_x":0,
+            "caption":"Scout is not willing to put up with this.",
+            "crop_w":448,
+            "num":1,
+            "crop_y":0,
+            "page":5
+        }
+    },
+    {
+        "pk":6,
+        "model":"gallery.photo",
+        "fields":{
+            "url":"http://espeon.co/~shadikka/img/saatana.jpg",
+            "crop_h":313,
+            "crop_x":0,
+            "caption":"It is rumored that the person in question is an old professor from HUT.",
+            "crop_w":200,
+            "num":1,
+            "crop_y":0,
+            "page":6
         }
     }
 ]
