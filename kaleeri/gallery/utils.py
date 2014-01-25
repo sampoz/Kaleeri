@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
+import hashlib
 import json
+import random
 from functools import wraps
 from django.http import HttpResponse
 
@@ -48,3 +50,11 @@ def missing_keys(dict_, keys):
     """
 
     return ", ".join([key for key in keys if key not in dict_]) or None
+
+
+def generate_hash():
+    """
+    Generates a random SHA-1 hash to be used for album share IDs. Returns a hexadecimal string.
+    """
+
+    return hashlib.sha1(random.getrandbits(256))
