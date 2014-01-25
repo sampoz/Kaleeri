@@ -45,7 +45,10 @@ def show_album(request, album_id):
         return {"error": "Forbidden"}
 
     return {
-        "parent": album.parent,
+        "parent": {
+            "id": album.parent.id,
+            "name": album.parent.name
+        } if album.parent else None,
         "owner": album.owner.get_username(),
         "name": album.name,
         "created_at": album.created_at.isoformat(),
