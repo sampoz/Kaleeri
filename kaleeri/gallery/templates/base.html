@@ -1,0 +1,38 @@
+{% load staticfiles %}
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Kaleeri</title>
+        <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+        <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    </head>
+
+    <body>
+        <header>
+            <nav role="navigation" class="navbar navbar-default">
+                <div class="collapse navbar-collapse">
+                    <div id="topic">
+                        <h1>Kaleeri &ndash; Enslave your images!</h1>
+                    </div>
+
+                    <ul class="navbar-nav navbar" id="links">
+                        <a class="navigation-item btn" href="">Log in</a>
+                        <a class="navigation-item btn" href="">Register</a>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <section>{% block content %}{% endblock %}</section>
+
+        <footer class="navbar-fixed-bottom">
+            <div id="footer-text">
+            Kaleeri &copy; Taistelu-Jaska Productions ltd.
+            </div>
+        </footer>
+
+        <script src="https://code.jquery.com/jquery.js"></script>
+        <script src="{% static 'js/bootstrap.js' %}"></script>
+    </body>
+</html>
