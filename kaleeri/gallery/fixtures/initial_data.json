@@ -1,13 +1,58 @@
-[{
-   "pk":1,
-   "model":"allaccess.provider",
-   "fields":{
-      "name":"facebook",
-      "authorization_url":"https://www.facebook.com/dialog/oauth",
-      "secret":"243b64518bf376ec830217b031a8180d",
-      "access_token_url":"https://graph.facebook.com/oauth/access_token",
-      "key":"654425071280875",
-      "request_token_url":"",
-      "profile_url":"https://graph.facebook.com/me"
-   }
-}]
+[
+    {
+        "pk": 1,
+        "model": "allaccess.provider",
+        "fields": {
+            "name": "facebook",
+            "authorization_url": "https://www.facebook.com/dialog/oauth",
+            "secret": "243b64518bf376ec830217b031a8180d",
+            "access_token_url": "https://graph.facebook.com/oauth/access_token",
+            "key": "654425071280875",
+            "request_token_url": "",
+            "profile_url": "https://graph.facebook.com/me"
+        }
+    },
+    {
+        "pk": 1,
+        "model": "gallery.album",
+        "fields": {
+            "owner": 1,
+            "created_at": "2014-01-25T17:37:07.696Z",
+            "share_id": "1",
+            "name": "Testialbumi I",
+            "parent": null
+        }
+    },
+    {
+        "pk": 1,
+        "model": "gallery.pagelayout",
+        "fields": {
+            "css_class": "four_page",
+            "num_photos": 4,
+            "name": "Four per page"
+        }
+    },
+    {
+        "pk": 1,
+        "model": "gallery.albumpage",
+        "fields": {
+            "album": 1,
+            "num": 1,
+            "layout": 1
+        }
+    },
+    {
+        "pk": 1,
+        "model": "gallery.photo",
+        "fields": {
+            "url": "http://espeon.co/~shadikka/img/rofl.gif",
+            "crop_h": 350,
+            "crop_x": 0,
+            "caption": "Lorem ipsum <3",
+            "crop_w": 395,
+            "num": 1,
+            "crop_y": 0,
+            "page": 1
+        }
+    }
+]
