@@ -15,7 +15,8 @@ class Album(models.Model):
     owner = models.ForeignKey(django.contrib.auth.models.User, help_text="The owner of the album")
     name = models.CharField(max_length=32, help_text="The name of the album, max. 32 characters")
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
-    share_id = models.CharField(max_length=40, blank=True, null=True, default=generate_hash, editable=False)
+    share_id = models.CharField(max_length=40, blank=True, null=True, default=generate_hash,
+                                editable=False, verbose_name="Share ID")
 
     def get_num_photos(self):
         """Returns the amount of photos in the album."""
