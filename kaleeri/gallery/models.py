@@ -1,9 +1,13 @@
 #!/usr/bin/env python
+import logging
 
 import django.contrib.auth.models
 from django.db import models
 from django.db.models import Sum
 from django.db.models.query import Q
+
+
+logger = logging.getLogger(__name__)
 
 
 class Album(models.Model):
@@ -20,7 +24,14 @@ class Album(models.Model):
         return self.albumpage_set.aggregate(Sum('layout__num_photos'))["layout__num_photos__sum"] or 0
 
     def has_user_access(self, user, share_id=None):
-        return user == self.owner or share_id == self.share_id
+        username = user.get_username() if user.is_authenticated() else "Anonymous"
+        if user == self.owner:
+            logger.info("User %s is the owner of album '%s', access granted", username, self.name)
+            return True
+        if share_id == self.share_id:
+            logger.info("Correct share ID for album '%s', access granted", self.name)
+            return True
+        logger.info("Denied access to album '%s' to user %s and share ID %s", self.name, username, share_id)
 
     def __unicode__(self):
         return self.name

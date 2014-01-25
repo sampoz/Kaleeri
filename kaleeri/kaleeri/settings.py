@@ -97,6 +97,7 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
 
+LOGIN_URL = '/login'
 LOGIN_REDIRECT_URL = '/'
 
 LOGGING = {
@@ -104,7 +105,7 @@ LOGGING = {
     'disable_existing_loggers': True,
     'formatters': {
         'verbose': {
-            'format': '%(asctime)s [%(levelname)s] %(module)s %(message)s'
+            'format': '%(asctime)s [%(levelname)s @ %(module)s] %(message)s'
         }
     },
     'handlers': {

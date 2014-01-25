@@ -14,8 +14,8 @@
 
     {% else %}
     <div id="base-logged-in">
-        <h2>YOU ARE LOGGED IN, BITCH!</h2>
-        <a class="btn btn-default" href="/add_album/">Crete new album</a>
+        <h2>Greetings, {{ user.get_username }}!</h2>
+        <a class="btn btn-default" href="{% url 'gallery.views.create_album' %}">Create new album</a>
     </div>
 {% endif %}
 
