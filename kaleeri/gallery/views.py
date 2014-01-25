@@ -64,5 +64,4 @@ def page(request):
 
 @login_required
 def userAccount(request):
-    print request.user.get_username()
-    return render_to_response('registration/userAccount.html')
+    return render_to_response('registration/userAccount.html', {"user": request.user})
