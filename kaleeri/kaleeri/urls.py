@@ -8,4 +8,6 @@ urlpatterns = patterns('',
     url(r'^$', 'gallery.views.home', name='home'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^accounts/', include('allaccess.urls')),
+    url(r'^login/$', 'django.contrib.auth.views.login',name="Kaleeri Login"),
+    url(r'^register/$', 'gallery.views.register',name="Kaleeri Register"),
 )
