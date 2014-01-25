@@ -1,4 +1,5 @@
 {% load staticfiles %}
+
 <!doctype html>
 <html>
     <head>
@@ -15,11 +16,17 @@
                     <div id="topic">
                         <a class="h1" href="/">Kaleeri &ndash; Enslave your images!</a>
                     </div>
-
+                    {% if not request.user.is_authenticated %}
                     <ul class="navbar-nav navbar" id="links">
                         <a class="navigation-item btn" href="/login">Log in</a>
                         <a class="navigation-item btn" href="/register">Register</a>
                     </ul>
+                    {% else %}
+                    <ul class="navbar-nav navbar" id="links">
+                        <a class="navigation-item btn" href="/profile">My Profile</a>
+                        <a class="navigation-item btn" href="/logout">Log out</a>
+                    </ul>
+                    {% endif %}
                 </div>
             </nav>
         </header>
