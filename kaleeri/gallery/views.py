@@ -2,14 +2,12 @@
 
 import logging
 from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponseRedirect
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 
 from django.shortcuts import render_to_response, render
-from .models import Gallery
+from .models import Album
 from .utils import render_to_json, missing_keys
 
 
@@ -30,31 +28,37 @@ def register(request):
 
 
 @render_to_json()
+def album(request):
+    if 'album' not in request.GET:
+        logging.info("Request for an album missing album ID parameter")
+
+
+@render_to_json()
 def page(request):
-    missing = missing_keys(request.GET, ('gallery', 'page'))
+    missing = missing_keys(request.GET, ('album', 'page'))
     if not missing:
         logging.info("Request for a page missing parameter(s): %s", missing)
         return {"error": "Invalid request"}
 
     username = request.user.get_username() if request.user.is_authenticated() else "Anonymous"
-    gallery_id = request.GET['gallery']
+    album_id = request.GET['album']
     page_num = request.GET['page']
 
     try:
-        gallery = Gallery.objects.get(id=request.GET['gallery'])
+        album = Album.objects.get(id=request.GET['album'])
     except ObjectDoesNotExist:
-        logging.info("Request for a non-existing gallery: %s", gallery_id)
-        return {"error": "No such gallery"}
+        logging.info("Request for a non-existing album: %s", album_id)
+        return {"error": "No such album"}
 
-    if not gallery.has_user_access(request.user):
-        logging.info("User %s requested gallery %s without access", username, gallery.name)
+    if not album.has_user_access(request.user):
+        logging.info("User %s requested album %s without access", username, album.name)
         return {"error": "Forbidden"}
 
-    if not 1 < page_num <= gallery.gallerypage_set.count():
-        logging.info("User %s requested out-of-bounds page %d in gallery %s", username, page_num, gallery.name)
+    if not 1 < page_num <= album.albumpage_set.count():
+        logging.info("User %s requested out-of-bounds page %d in album %s", username, page_num, album.name)
         return {"error": "Invalid page"}
 
-    result_page = gallery.gallerypage_set.get(num=page_num)
+    result_page = album.albumpage_set.get(num=page_num)
 
     return {
         "photos": [

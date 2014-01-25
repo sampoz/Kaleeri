@@ -4,7 +4,7 @@ import django.contrib.auth.models
 from django.db import models
 
 
-class Gallery(models.Model):
+class Album(models.Model):
     parent = models.ForeignKey('self', blank=True, null=True)
     owner = models.ForeignKey(django.contrib.auth.models.User)
     name = models.CharField(max_length=32)
@@ -21,8 +21,8 @@ class PageLayout(models.Model):
     num_photos = models.IntegerField()
 
 
-class GalleryPage(models.Model):
-    gallery = models.ForeignKey(Gallery)
+class AlbumPage(models.Model):
+    album = models.ForeignKey(Album)
     layout = models.ForeignKey(PageLayout)
     num = models.IntegerField()
 
@@ -31,7 +31,7 @@ class GalleryPage(models.Model):
 
 
 class Photo(models.Model):
-    page = models.ForeignKey(GalleryPage)
+    page = models.ForeignKey(AlbumPage)
     url = models.URLField()
     num = models.IntegerField()
     caption = models.TextField(blank=True)
