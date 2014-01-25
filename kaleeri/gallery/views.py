@@ -7,9 +7,10 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 
 from django.shortcuts import render_to_response, render
+from django.template import RequestContext
 from .models import Album
 from .utils import render_to_json
-from .forms import AlbumForm
+
 
 logger = logging.getLogger(__name__)
 
@@ -91,15 +92,19 @@ def show_page(request, album_id, page_num):
     }
 
 
-
 @login_required
-def add_album(request):
+def create_album(request):
     if request.method == 'GET':
-        return render_to_response('album/create.html', {"user": request.user})
+        return render_to_response('album/create.html', {"user": request.user}, context_instance=RequestContext(request))
     elif request.method == 'POST':
-        a = Album(name=request.POST.album_name)
-        a.save()
-        return render_to_response('/')
+        album = Album(
+            parent=None,
+            owner=request.user,
+            name=request.POST["album_name"]
+        )
+        album.save()
+        return HttpResponseRedirect('/')
+
 
 @login_required
 def user_account(request):

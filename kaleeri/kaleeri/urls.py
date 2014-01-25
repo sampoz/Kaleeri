@@ -15,5 +15,5 @@ urlpatterns = patterns(
     url(r'^album/(\d+)$', 'gallery.views.show_album'),
     url(r'^album/(\d+)/page/(\d+)$', 'gallery.views.show_page'),
     url(r'^album/(\d+)/page/(\d+)', 'gallery.views.show_page'),
-    url(r'^add_album/$', 'gallery.views.add_album'),
+    url(r'^album/create/$', 'gallery.views.create_album'),
 )

@@ -2,13 +2,17 @@
 {% block title %}Create an album{% endblock %}
 
 {% block content %}
-  <div id="album-form">
-  <h1>Create an album</h1>
 
-    <form action="/add_album/" method="post">
+    <div id="album-form">
+    <h1>Create an album</h1>
+
+    <form action="{% url 'gallery.views.create_album' %}" method="post">
             {% csrf_token %}
-            <input id="album-name" type="text">
-            <input class="btn btn-default"type="submit" value="Create the album">
+            <label>
+                Album name:
+                <input name="album_name" id="album_name" type="text" placeholder="Album name">
+            </label>
+            <input class="btn btn-default" type="submit" value="Create the album">
         </form>
     </div>
 
