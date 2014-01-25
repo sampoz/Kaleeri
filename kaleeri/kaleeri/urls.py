@@ -9,7 +9,7 @@ urlpatterns = patterns(
     url(r'^admin/', include(admin.site.urls)),
     url(r'^accounts/', include('allaccess.urls')),
     url(r'^login/$', 'django.contrib.auth.views.login', name="Kaleeri Login"),
-    url(r'^logout/$', 'django.contrib.auth.views.logout', name="Kaleeri Logout"),
+    url(r'^logout/$', 'django.contrib.auth.views.logout', {"next_page": "/"}, name="Kaleeri Logout"),
     url(r'^register/$', 'gallery.views.register', name="Kaleeri Register"),
     url(r'^profile$', 'gallery.views.user_account', name="Kaleeri Profile"),
     url(r'^album/(\d+)/([a-f0-9]{40})?$', 'gallery.views.show_album'),
