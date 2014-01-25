@@ -13,13 +13,13 @@ class Album(models.Model):
     share_id = models.CharField(max_length=40, blank=True, null=True)
 
     def get_num_photos(self):
-        return self.albumpage_set.aggregate(Sum('photoset__count'))
+        return self.albumpage_set.aggregate(Sum('photo'))["photo__sum"] or 0
 
     def get_max_photos(self):
-        return self.albumpage_set.aggregate(Sum('layout__num_photos'))
+        return self.albumpage_set.aggregate(Sum('layout__num_photos'))["layout__num_photos__sum"] or 0
 
     def has_user_access(self, user):
-        return user is self.owner
+        return user == self.owner
 
 
 class PageLayout(models.Model):
