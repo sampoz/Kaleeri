@@ -19,8 +19,8 @@ class Album(models.Model):
     def get_max_photos(self):
         return self.albumpage_set.aggregate(Sum('layout__num_photos'))["layout__num_photos__sum"] or 0
 
-    def has_user_access(self, user):
-        return user == self.owner
+    def has_user_access(self, user, share_id=None):
+        return user == self.owner or share_id == self.share_id
 
     def __unicode__(self):
         return self.name

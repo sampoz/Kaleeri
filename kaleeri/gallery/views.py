@@ -32,7 +32,7 @@ def register(request):
 
 
 @render_to_json()
-def show_album(request, album_id):
+def show_album(request, album_id, share_id=None):
     username = request.user.get_username() if request.user.is_authenticated() else "Anonymous"
 
     try:
@@ -41,7 +41,7 @@ def show_album(request, album_id):
         logger.info("User %s requested a non-existing album: %s", username, album_id)
         return {"error": "No such album"}
 
-    if not album.has_user_access(request.user):
+    if not album.has_user_access(request.user, share_id):
         logger.info("User %s requested album %s without access", username, album.name)
         return {"error": "Forbidden"}
 
@@ -61,7 +61,7 @@ def show_album(request, album_id):
 
 
 @render_to_json()
-def show_page(request, album_id, page_num):
+def show_page(request, album_id, page_num, share_id=None):
     username = request.user.get_username() if request.user.is_authenticated() else "Anonymous"
     page_num = int(page_num)
 
@@ -71,7 +71,7 @@ def show_page(request, album_id, page_num):
         logger.info("User %s requested a page in a non-existing album: %s", username, album_id)
         return {"error": "No such album"}
 
-    if not album.has_user_access(request.user):
+    if not album.has_user_access(request.user, share_id):
         logger.info("User %s requested page from album %s without access", username, album.name)
         return {"error": "Forbidden"}
 
