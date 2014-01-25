@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
 from django.contrib import admin
-from .models import Gallery, GalleryPage, PageLayout, Photo
+from .models import Album, AlbumPage, PageLayout, Photo
 
-admin.site.register(Gallery)
-admin.site.register(GalleryPage)
+admin.site.register(Album)
+admin.site.register(AlbumPage)
 admin.site.register(PageLayout)
 admin.site.register(Photo)
