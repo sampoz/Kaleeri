@@ -1,5 +1,6 @@
 #topic {
     float:left;
+    padding-left: 2em;
 }
 
 #links {
@@ -9,4 +10,16 @@
 
 #footer-text {
     float:right;
+}
+
+#base-text > p {
+    width: 80%;
+}
+
+#base-text {
+    padding-left: 2em;
+}
+
+body {
+    padding-bottom: 30px;
 }
