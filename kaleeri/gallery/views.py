@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response, render
 from .models import Album
 from .utils import render_to_json
-
+from .forms import AlbumForm
 
 logger = logging.getLogger(__name__)
 
@@ -90,12 +90,14 @@ def show_page(request, album_id, page_num):
         ]
     }
 
+
+
 @login_required
 def add_album(request):
     if request.method == 'GET':
-        return render_to_response('album/create.html')
+        return render_to_response('album/create.html', {"user": request.user})
     elif request.method == 'POST':
-        a = Album(name=request.POST.album-name)
+        a = Album(name=request.POST.album_name)
         a.save()
         return render_to_response('/')
 
