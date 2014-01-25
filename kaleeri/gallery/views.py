@@ -97,6 +97,7 @@ def create_album(request):
     if request.method == 'GET':
         return render_to_response('album/create.html', {"user": request.user}, context_instance=RequestContext(request))
     elif request.method == 'POST':
+        logger.info("Creating album '%s' for user %s", request.POST["album_name"], request.user.get_username())
         album = Album(
             parent=None,
             owner=request.user,
