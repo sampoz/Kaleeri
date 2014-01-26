@@ -50,6 +50,11 @@ $(function() {
 Kaleeri.nextPage = function(){
     console.log("lol");
     Kaleeri.fadeOutAlbums(history.state.parameter.albumId,history.state.parameter.pageNumber+1);
+    Kaleeri.fadeInAlbums();
+};
+
+Kaleeri.fadeInAlbums= function(){
+    $("#content-placeholder").fadeIn();
 };
 
 Kaleeri.loadAlbums = function () {

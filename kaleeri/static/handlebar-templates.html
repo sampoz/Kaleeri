@@ -11,12 +11,18 @@
 </script>
 
 <script id="album_view" type="text/x-handlebars-template">
+<div id="buttons" class="btn-group">
+<a class="btn btn-default" href="/album/create">Create a new album</a>
+<a class="btn btn-default" href="" >Add a new photo</a>
+<a class="btn btn-default" onclick="Kaleeri.nextPage()" >Next Page</a>
+
+</div>
+    <div class="row">
     {{#photos}}
         <div class="col-md-4" onclick="">
         <img src="{{ url }}">
         <p>{{ caption }}</p>
         </div>
     {{/photos}}
-    <a class="btn btn-default" onclick="Kaleeri.nextPage()">Next Page</a>
     </div>
 </script>
