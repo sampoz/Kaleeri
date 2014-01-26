@@ -39,19 +39,6 @@ def render_to_json(**jsonargs):
     return outer
 
 
-def missing_keys(dict_, keys):
-    """
-    Ensures that the given dict has the given keys. Returns either None or a string
-    containing the missing keys.
-
-    missing = missing_keys(request.POST, ('username', 'password'))
-    if missing:
-        ...
-    """
-
-    return ", ".join([key for key in keys if key not in dict_]) or None
-
-
 def generate_hash():
     """
     Generates a random SHA-1 hash to be used for album share IDs. Returns a hexadecimal string.

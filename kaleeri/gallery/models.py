@@ -20,7 +20,7 @@ class Album(models.Model):
 
     def get_num_photos(self):
         """Returns the amount of photos in the album."""
-        return Photo.objects.filter(Q(page__album = self)).count()
+        return Photo.objects.filter(Q(page__album=self)).count()
 
     def get_max_photos(self):
         """Returns the maximum amount of photos in the album with the current amount and type of pages."""
