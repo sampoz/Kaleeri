@@ -49,9 +49,21 @@ body {
 #buttons {
     padding-bottom: 1em;
 }
+#img-container{
+    height: 250px;
+}
+
+#img-container > p {
+    padding-top: 2em;
+    position: absolute;
+    bottom: 0;
+}
 
 #images {
     width: 100%;
+    margin: auto;
+    position: absolute;
+    padding: 1em 1em 1em 1em;
 }
 
 #id_username, #id_password, #id_password1, #id_password2, #album_name {
