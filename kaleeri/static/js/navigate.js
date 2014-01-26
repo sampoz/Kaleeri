@@ -13,6 +13,14 @@ $(function() {
     );
 });
 
-function loadAlbums(){
-
+Kaleeri.loadAlbums= function() {
+    $(document).ready(function(){
+        $.getJSON("album/list", function (data) {
+            var source = Kaleeri.templates.album_front;
+            var context = data;
+            var template = Handlebars.compile(source);
+            var html = template(context);
+            $("#content-placeholder").html(html);
+        })
+    });
 }
