@@ -3,7 +3,8 @@ window.Kaleeri = {
     "urls": {
         create_album:"/album/create",
         add_picture:""
-    }
+    },
+    "state": "main"
 };
 var state = {
     "view": "main",
@@ -48,8 +49,14 @@ $(function() {
 });
 
 Kaleeri.nextPage = function(){
-    console.log("lol");
-    Kaleeri.fadeOutAlbums(history.state.parameter.albumId,history.state.parameter.pageNumber+1);
+    console.log(Kaleeri.state);
+    Kaleeri.fadeOutAlbums(Kaleeri.state.parameter.albumId, parseInt(Kaleeri.state.parameter.pageNumber)+1);
+    Kaleeri.fadeInAlbums();
+};
+
+Kaleeri.previousPage = function(){
+    console.log(Kaleeri.state);
+    Kaleeri.fadeOutAlbums(Kaleeri.state.parameter.albumId, parseInt(Kaleeri.state.parameter.pageNumber)-1);
     Kaleeri.fadeInAlbums();
 };
 
@@ -82,11 +89,14 @@ Kaleeri.loadAlbumPhotos = function (albumId, pageNumber) {
             var source = Kaleeri.templates.album_view;
             var template = Handlebars.compile(source);
             var html = template(data);
-            $("#content-placeholder").html(html).fadeIn();
+            $("#content-placeholder").html(html);
+            Kaleeri.fadeInAlbums();
             state.view = "albumPhotos";
             console.log("Setting parameters "+albumId +" and "+pageNumber)
-            state.parameter.albumId = albumId;
-            state.parameter.pageNumber = pageNumber;
+            state.parameter={};
+            state.parameter.albumId = String(albumId);
+            state.parameter.pageNumber = String(pageNumber);
+            Kaleeri.state=state;
             history.pushState(state, " ", "#album/" + albumId + "/page/" + pageNumber);
 
         })
