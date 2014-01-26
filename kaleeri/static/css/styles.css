@@ -46,6 +46,9 @@ body {
     max-width: 80%;
 }
 
+#buttons {
+    padding-bottom: 1em;
+}
 
 #id_username, #id_password, #id_password1, #id_password2 {
     display: block;
