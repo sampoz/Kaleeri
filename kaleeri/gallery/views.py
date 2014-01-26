@@ -32,7 +32,7 @@ def register(request):
 
 
 @render_to_json()
-def list_albums(request, parent=None, share_id=None, recurse=True):
+def list_albums(request, parent=None, share_id=None):
     """Returns a list of the logged-in user's albums or the subalbums of the given album."""
     if not request.user.is_authenticated() and not parent and not share_id:
         logger.info("An anonymous user tried to retrieve the list of albums")
