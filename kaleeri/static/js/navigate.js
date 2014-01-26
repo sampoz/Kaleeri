@@ -47,6 +47,11 @@ $(function() {
     );
 });
 
+Kaleeri.nextPage = function(){
+    console.log("lol");
+    Kaleeri.fadeOutAlbums(history.state.parameter.albumId,history.state.parameter.pageNumber+1);
+};
+
 Kaleeri.loadAlbums = function () {
     $(document).ready(function () {
         $.getJSON("album/list", function (data) {

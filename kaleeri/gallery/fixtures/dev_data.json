@@ -223,5 +223,34 @@
             "crop_y": 0,
             "page": 3
         }
+    },
+    {
+        "pk": 8,
+        "model": "gallery.photo",
+        "fields": {
+            "url": "http://espeon.co/~shadikka/img/my_fetish.gif",
+            "crop_h": 182,
+            "crop_x": 0,
+            "caption": ">:)",
+            "crop_w": 280,
+            "num": 2,
+            "crop_y": 0,
+            "page": 3
+        }
+
+    },
+    {
+        "pk": 9,
+        "model": "gallery.photo",
+        "fields": {
+            "url": "http://espeon.co/~shadikka/img/my_fetish.gif",
+            "crop_h": 182,
+            "crop_x": 0,
+            "caption": ">:)",
+            "crop_w": 280,
+            "num": 2,
+            "crop_y": 0,
+            "page": 3
+        }
     }
 ]
