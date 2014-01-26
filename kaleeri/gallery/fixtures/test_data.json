@@ -383,7 +383,7 @@
             "last_login": "2014-01-26T10:35:07.757Z",
             "groups": [],
             "user_permissions": [],
-            "password": "irrelevant",
+            "password": "pbkdf2_sha256$12000$WR2vbLgEXaTv$SLNNvW22uyPYO7GNmajlMbFMbBKcUlYOFsVAPjdplII=",
             "email": "test@example.com",
             "date_joined": "2014-01-26T10:35:07.757Z"
         }
@@ -401,7 +401,7 @@
             "last_login": "2014-01-26T10:35:07.764Z",
             "groups": [],
             "user_permissions": [],
-            "password": "irrelevant",
+            "password": "pbkdf2_sha256$12000$WR2vbLgEXaTv$SLNNvW22uyPYO7GNmajlMbFMbBKcUlYOFsVAPjdplII=",
             "email": "another_test@example.com",
             "date_joined": "2014-01-26T10:35:07.764Z"
         }

@@ -32,13 +32,30 @@ def register(request):
 
 
 @render_to_json()
-def list_albums(request):
-    """Returns a list of the logged-in user's albums."""
-    if not request.user.is_authenticated():
+def list_albums(request, parent=None, share_id=None, recurse=True):
+    """Returns a list of the logged-in user's albums or the subalbums of the given album."""
+    if not request.user.is_authenticated() and not parent and not share_id:
         logger.info("An anonymous user tried to retrieve the list of albums")
         return {"error": "Forbidden"}
 
-    albums = Album.objects.filter(owner=request.user).annotate(subalbums=Count('album'))
+    if parent is not None:
+        username = request.user.get_username() if request.user.is_authenticated() else "Anonymous"
+        try:
+            album = Album.objects.get(id=parent)
+        except ObjectDoesNotExist:
+            logger.info("User %s requested subalbums of a non-existing album: %s", username, parent)
+            return {"error": "No such album"}
+
+        if not album.has_user_access(request.user, share_id):
+            logger.info("User %s requested subalbums of album %s without access", username, parent)
+            return {"error": "Forbidden"}
+
+    if share_id:
+        albums = Album.objects.filter(parent=parent)
+    else:
+        albums = Album.objects.filter(owner=request.user, parent=parent)
+    albums = albums.annotate(subalbums=Count('album'))
+
     return {
         "albums": [
             {
