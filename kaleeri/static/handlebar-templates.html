@@ -19,10 +19,11 @@
 </div>
     <div class="row">
     {{#photos}}
-        <div class="col-md-4" onclick="">
-        <img src="{{ url }}">
+        <div class="col-md-2" onclick="">
+        <img id="images" src="{{ url }}" >
         <p>{{ caption }}</p>
         </div>
+
     {{/photos}}
     </div>
 </script>
@@ -31,5 +32,6 @@
 <div id="details">
     <h2>{{ name }}</h2>
     <p>Number of photos: {{ photos }}</p>
+    <p>Number of pages: {{ pages }}</p>
 </div>
 </script>

@@ -88,7 +88,7 @@ Kaleeri.loadAlbumPhotos = function (albumId, pageNumber) {
             var source2 = Kaleeri.templates.album_details;
             var template2 = Handlebars.compile(source2);
             var html2 = template2(data2);
-            $("#content-placeholder").html(html2).fadeIn();
+            $("#content-placeholder").html(html2);
 
         })
         $.getJSON("album/" + albumId + "/page/" + pageNumber, function (data) {
