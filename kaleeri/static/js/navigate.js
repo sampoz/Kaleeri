@@ -17,9 +17,18 @@ Kaleeri.loadAlbums= function() {
     $(document).ready(function(){
         $.getJSON("album/list", function (data) {
             var source = Kaleeri.templates.album_front;
-            var context = data;
             var template = Handlebars.compile(source);
-            var html = template(context);
+            var html = template(data);
+            $("#content-placeholder").html(html);
+        })
+    });
+}
+Kaleeri.loadAlbumPhotos= function(albumId,pageNumber) {
+    $(document).ready(function(){
+        $.getJSON("album/"+albumId+"/page/"+pageNumber, function (data) {
+            var source = Kaleeri.templates.album_view;
+            var template = Handlebars.compile(source);
+            var html = template(data);
             $("#content-placeholder").html(html);
         })
     });

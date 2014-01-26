@@ -1,12 +1,13 @@
 <script id="album_front" type="text/x-handlebars-template">
     {{#albums}}
-        <div class="col-md-3" onclick="Kaaleri.loadAlbumPhotos({{id}})"><span class="glyphicon glyphicon-folder-close"></span> {{name}}</div>
+        <div class="col-md-3" onclick="Kaleeri.loadAlbumPhotos({{id}},1)"><span class="glyphicon glyphicon-folder-close"></span> {{name}}</div>
     {{/albums}}
 </script>
 
 <script id="album_view" type="text/x-handlebars-template">
     {{#photos}}
-        <div class="col-md-4" onclick="">{{name}}/<div>
+        <div class="col-md-4" onclick="">{{ caption }}
+        <img src="{{ url }}">
+        </div>
     {{/photos}}
-
 </script>
