@@ -11,6 +11,7 @@ var state = {
     "parameter": ""
 };
 
+
 window.addEventListener("popstate", function(e) {
     console.log(location.hash);
     loadState(event.state);
@@ -49,13 +50,11 @@ $(function() {
 });
 
 Kaleeri.nextPage = function(){
-    console.log(Kaleeri.state);
     Kaleeri.fadeOutAlbums(Kaleeri.state.parameter.albumId, parseInt(Kaleeri.state.parameter.pageNumber)+1);
     Kaleeri.fadeInAlbums();
 };
 
 Kaleeri.previousPage = function(){
-    console.log(Kaleeri.state);
     Kaleeri.fadeOutAlbums(Kaleeri.state.parameter.albumId, parseInt(Kaleeri.state.parameter.pageNumber)-1);
     Kaleeri.fadeInAlbums();
 };
