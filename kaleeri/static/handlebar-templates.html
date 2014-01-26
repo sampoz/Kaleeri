@@ -1,6 +1,6 @@
 <script id="album_front" type="text/x-handlebars-template">
 <div id="buttons" class="btn-group">
-<a class="btn btn-default" href="{% url 'gallery.views.create_album' %}">Create new album</a>
+<a class="btn btn-default" href="/album/create">Create a new album</a>
 </div>
 <div class="row">
     {{#albums}}
@@ -12,8 +12,8 @@
 <script id="album_view" type="text/x-handlebars-template">
 <div id="buttons" class="btn-group">
 
-<a class="btn btn-default" href="{% url 'gallery.views.create_album' %}">Create new album</a>
-    <a class="btn btn-default" href="{% url 'gallery.views.add_photo' %}">Add new photo</a>
+<a class="btn btn-default" href="/album/create">Create a new album</a>
+    <a class="btn btn-default" href="Kareeri.urls.add_photo">Add a new photo</a>
 </div>
     <div class="row">
     {{#photos}}

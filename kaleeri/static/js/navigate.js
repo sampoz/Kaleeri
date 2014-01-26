@@ -1,5 +1,9 @@
 window.Kaleeri = {
-    "templates": {}
+    "templates": {},
+    "urls": {
+        create_album:"/album/create",
+        add_picture:""
+    }
 };
 var state = {
     "view" : "main",
