@@ -35,6 +35,7 @@ def register(request):
 def list_albums(request):
     """Returns a list of the logged-in user's albums."""
     if not request.user.is_authenticated():
+        logger.info("An anonymous user tried to retrieve the list of albums")
         return {"error": "Forbidden"}
 
     albums = Album.objects.filter(owner=request.user).annotate(subalbums=Count('album'))
