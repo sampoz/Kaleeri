@@ -61,7 +61,6 @@ Kaleeri.loadAlbums = function () {
 };
 
 Kaleeri.fadeOutAlbums = function (albumId,pageNumber) {
-    console.log("lol");
     $("#content-placeholder").fadeOut(300, function(){
         Kaleeri.loadAlbumPhotos(albumId,pageNumber);
     });
