@@ -85,11 +85,19 @@ Kaleeri.fadeOutAlbums = function (albumId,pageNumber) {
 
 Kaleeri.loadAlbumPhotos = function (albumId, pageNumber) {
     $(document).ready(function () {
+        $.getJSON("album/"+albumId +"/", function(data2) {
+            var source2 = Kaleeri.templates.album_details;
+            var template2 = Handlebars.compile(source2);
+            var html2 = template2(data2);
+            $("#content-placeholder").html(html2).fadeIn();
+
+        })
         $.getJSON("album/" + albumId + "/page/" + pageNumber, function (data) {
             var source = Kaleeri.templates.album_view;
             var template = Handlebars.compile(source);
             var html = template(data);
-            $("#content-placeholder").html(html);
+            $("#content-placeholder").append(html);
+            
             Kaleeri.fadeInAlbums();
             state.view = "albumPhotos";
             console.log("Setting parameters "+albumId +" and "+pageNumber)
@@ -100,5 +108,7 @@ Kaleeri.loadAlbumPhotos = function (albumId, pageNumber) {
             history.pushState(state, " ", "#album/" + albumId + "/page/" + pageNumber);
 
         })
+
     })
+
 };
