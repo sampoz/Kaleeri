@@ -14,5 +14,6 @@ urlpatterns = patterns(
     url(r'^profile$', 'gallery.views.user_account', name="Kaleeri Profile"),
     url(r'^album/(\d+)/([a-f0-9]{40})?$', 'gallery.views.show_album'),
     url(r'^album/(\d+)/page/(\d+)/([a-f0-9]{40})?$', 'gallery.views.show_page'),
+    url(r'^album/list$', 'gallery.views.list_albums'),
     url(r'^album/create/$', 'gallery.views.create_album'),
 )

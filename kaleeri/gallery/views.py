@@ -2,10 +2,10 @@
 
 import logging
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Count
 from django.http import HttpResponseRedirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
-
 from django.shortcuts import render_to_response, render
 from django.template import RequestContext
 from .models import Album
@@ -32,6 +32,26 @@ def register(request):
 
 
 @render_to_json()
+def list_albums(request):
+    """Returns a list of the logged-in user's albums."""
+    if not request.user.is_authenticated():
+        return {"error": "Forbidden"}
+
+    albums = Album.objects.filter(owner=request.user).annotate(subalbums=Count('album'))
+    return {
+        "albums": [
+            {
+                "id": album.id,
+                "name": album.name,
+                "photos": album.get_num_photos(),
+                "share_id": album.share_id,
+                "subalbums": album.subalbums
+            } for album in albums
+        ]
+    }
+
+
+@render_to_json()
 def show_album(request, album_id, share_id=None):
     username = request.user.get_username() if request.user.is_authenticated() else "Anonymous"
 
@@ -50,6 +70,7 @@ def show_album(request, album_id, share_id=None):
             "id": album.parent.id,
             "name": album.parent.name
         } if album.parent else None,
+        "id": album.id,
         "owner": album.owner.get_username(),
         "name": album.name,
         "created_at": album.created_at.isoformat(),
