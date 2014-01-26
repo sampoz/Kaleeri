@@ -57,4 +57,4 @@ def generate_hash():
     Generates a random SHA-1 hash to be used for album share IDs. Returns a hexadecimal string.
     """
 
-    return hashlib.sha1(random.getrandbits(256))
+    return hashlib.sha1(str(random.getrandbits(256))).hexdigest()
