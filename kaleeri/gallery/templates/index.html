@@ -14,9 +14,34 @@
 
     {% else %}
     <div id="base-logged-in">
-        <h2>Greetings, {{ user.get_username }}!</h2>
-        <a class="btn btn-default" href="{% url 'gallery.views.create_album' %}">Create new album</a>
+        <div id="albums" class="row">
+            <script id="album-front-template" type="text/x-handlebars-template">
+                {% verbatim %}
+                    {{#albums}}
+                        <div class="col-md-3"><a href="/album/{{id}}">{{name}}</a></div>
+                    {{/albums}}
+                {% endverbatim %}
+            </script>
+            <script>
+                $(document).ready(function(){
+                    $.getJSON("album/list", function (data) {
+                        console.log(data);
+                        var source = $("#album-front-template").html();
+
+                        var context = data;
+                        var template = Handlebars.compile(source);
+                        var html = template(context);
+                        $("#content-placeholder").html(html);
+                    })
+
+                });
+            </script>
+        <a class="btn btn-default" href="{% url 'gallery.views.create_album' %}">Crete new album</a>
+        <div id="content-placeholder"></div>
+        </div>
+
     </div>
+
 {% endif %}
 
 {% endblock content %}
