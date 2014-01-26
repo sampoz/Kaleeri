@@ -44,6 +44,10 @@ class AlbumTest(TestCase):
         self.assertEquals(unicode(album_page), u"Page 1 of album 'Test album' with 4 photos")
         self.assertEquals(unicode(album_photo), u"Photo 1, page 1, album 'Test album': ")
 
+    def assertJSONError(self, path):
+        response = self.client.get(path)
+        self.assertTrue("error" in json.loads(response.content))
+
     def test_views(self):
         # http://www.youtube.com/watch?v=MEEM5aQNXNU
         # Anonymous homepage
@@ -52,14 +56,10 @@ class AlbumTest(TestCase):
         self.assertEquals(response.content.find('<div id="base-logged-in">'), -1)
 
         # Anonymous album list
-        response = self.client.get("/album/list/")
-        data = json.loads(response.content)
-        self.assertTrue("error" in data)
+        self.assertJSONError("/album/list/")
 
         # Anonymous subalbum list
-        response = self.client.get("/album/1/subalbums/")
-        data = json.loads(response.content)
-        self.assertTrue("error" in data)
+        self.assertJSONError("/album/1/subalbums/")
 
         # Login
         response = self.client.post("/login/", {"username": "TestUser", "password": "irrelevant"})
@@ -72,9 +72,7 @@ class AlbumTest(TestCase):
 
         # Authenticated album list
         response = self.client.get("/album/list/")
-        data = json.loads(response.content)
-        self.assertTrue("error" not in data)
-        self.assertEquals(data, {
+        self.assertJSONEqual(response.content, {
             "albums": [
                 {
                     "id": 1,
@@ -99,15 +97,11 @@ class AlbumTest(TestCase):
             ]
         }
         response = self.client.get("/album/1/subalbums/")
-        data = json.loads(response.content)
-        self.assertTrue("error" not in data)
-        self.assertEquals(data, testalbum_subalbums)
+        self.assertJSONEqual(response.content, testalbum_subalbums)
 
         # Available album for the owner
         response = self.client.get("/album/1/")
-        data = json.loads(response.content)
-        self.assertFalse("error" in data)
-        self.assertEquals(data, {
+        self.assertJSONEqual(response.content, {
             "parent": None,
             "id": 1,
             "owner": "TestUser",
@@ -121,9 +115,7 @@ class AlbumTest(TestCase):
 
         # Available page
         response = self.client.get("/album/1/page/1/")
-        data = json.loads(response.content)
-        self.assertFalse("error" in data)
-        self.assertEquals(data, {
+        self.assertJSONEqual(response.content, {
             "photos": [
                 {"url": "http://example.com", "caption": "", "crop": [0, 0, 0, 0]},
                 {"url": "http://example.com", "caption": "", "crop": [0, 0, 0, 0]},
@@ -133,29 +125,21 @@ class AlbumTest(TestCase):
         })
 
         # Non-existent page
-        response = self.client.get("/album/1/page/0/")
-        data = json.loads(response.content)
-        self.assertTrue("error" in data)
+        self.assertJSONError("/album/1/page/0/")
 
         # Log out
         response = self.client.get("/logout/")
         self.assertEquals(response.status_code, 302)
 
         # Album not available when logged out
-        response = self.client.get("/album/2/")
-        data = json.loads(response.content)
-        self.assertTrue("error" in data)
+        self.assertJSONError("/album/2/")
 
         # Page not available when logged out
-        response = self.client.get("/album/2/page/1/")
-        data = json.loads(response.content)
-        self.assertTrue("error" in data)
+        self.assertJSONError("/album/2/page/1/")
 
         # Available via share ID
         response = self.client.get("/album/2/3218478924830f8f5abb927c53771c2282dce554")
-        data = json.loads(response.content)
-        self.assertFalse("error" in data)
-        self.assertEquals(data, {
+        self.assertJSONEqual(response.content, {
             "parent": {
                 "id": 1,
                 "name": "Test album"
@@ -172,24 +156,16 @@ class AlbumTest(TestCase):
 
         # Subalbums available via share ID
         response = self.client.get("/album/1/subalbums/fad201add0c32047f037f46e8a213d0d9213e54a")
-        data = json.loads(response.content)
-        self.assertFalse("error" in data)
-        self.assertEquals(data, testalbum_subalbums)
+        self.assertJSONEqual(response.content, testalbum_subalbums)
 
         # Non-existent album
-        response = self.client.get("/album/65536/")
-        data = json.loads(response.content)
-        self.assertTrue("error" in data)
+        self.assertJSONError("/album/65536/")
 
         # Page in non-existent album
-        response = self.client.get("/album/65536/page/1/")
-        data = json.loads(response.content)
-        self.assertTrue("error" in data)
+        self.assertJSONError("/album/65536/page/1/")
 
         # Sbubalbums of a non-existent album
-        response = self.client.get("/album/65536/subalbums/")
-        data = json.loads(response.content)
-        self.assertTrue("error" in data)
+        self.assertJSONError("/album/65536/subalbums/")
 
         # Registration page
         response = self.client.get("/register/")
