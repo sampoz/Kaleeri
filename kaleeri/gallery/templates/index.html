@@ -18,7 +18,7 @@
             <script id="album-front-template" type="text/x-handlebars-template">
                 {% verbatim %}
                     {{#albums}}
-                        <div class="col-md-3"><a href="/album/{{id}}">{{name}}</a></div>
+                        <div class="col-md-3"><a href="/album/{{id}}"><span class="glyphicon glyphicon-folder-close"></span> {{name}}</a></div>
                     {{/albums}}
                 {% endverbatim %}
             </script>
@@ -36,7 +36,7 @@
 
                 });
             </script>
-        <a class="btn btn-default" href="{% url 'gallery.views.create_album' %}">Crete new album</a>
+        <a class="btn btn-default" href="{% url 'gallery.views.create_album' %}">Create new album</a>
         <div id="content-placeholder"></div>
         </div>
 

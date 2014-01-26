@@ -37,11 +37,14 @@ body {
     padding-bottom: 30px;
 }
 
-#login-form, #album-form, #base-logged-in {
+#login-form, #album-form{
   max-width: 300px;
   margin: 0 auto;
 }
-
+#base-logged-in {
+    margin: 0 auto;
+    max-width: 80%;
+}
 
 
 #id_username, #id_password, #id_password1, #id_password2 {
