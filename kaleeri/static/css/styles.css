@@ -49,21 +49,16 @@ body {
 #buttons {
     padding-bottom: 1em;
 }
-#img-container{
+.img-container{
     height: 250px;
+    display: table-cell;
+    vertical-align: middle;
+
 }
 
-#img-container > p {
-    padding-top: 2em;
-    position: absolute;
-    bottom: 0;
-}
-
-#images {
+.img-container > img {
+    margin: 0 auto;
     width: 100%;
-    margin: auto;
-    position: absolute;
-    padding: 1em 1em 1em 1em;
 }
 
 #id_username, #id_password, #id_password1, #id_password2, #album_name {

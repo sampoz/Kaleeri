@@ -13,15 +13,19 @@
 <div id="buttons" class="btn-group">
 <a class="btn btn-default" href="/album/create">Create a new album</a>
 <a class="btn btn-default" href="" >Add a new photo</a>
-<a class="btn btn-default" onclick="Kaleeri.nextPage()" >Next Page</a>
-<a class="btn btn-default" onclick="Kaleeri.previousPage()" >Previous Page</a>
+<a class="btn btn-default" onclick="Kaleeri.previousPage()" ><span class="glyphicon glyphicon-chevron-left"></span> Previous Page</a>
+<a class="btn btn-default" onclick="Kaleeri.nextPage()" >Next Page <span class="glyphicon glyphicon-chevron-right"></span></a>
 
 </div>
     <div class="row">
     {{#photos}}
-        <div class="col-md-2" id="img-container" onclick="">
-        <img id="images" src="{{ url }}" >
-        <p>{{ caption }}</p>
+        <div class="col-md-2" id="container">
+            <div class="img-container" onclick="">
+                <img src="{{ url }}" >
+            </div>
+            <div class="caption-container">
+                <p>{{ caption }}</p>
+            </div>
         </div>
 
     {{/photos}}
