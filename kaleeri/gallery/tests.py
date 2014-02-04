@@ -200,8 +200,9 @@ class AlbumTest(TestCase):
         self.assertEquals(response.status_code, 200)
         self.assertEquals(response.templates[0].name, "registration/userAccount.html")
 
+    @staticmethod
     @render_to_json()
-    def dummy_view(self, data):
+    def dummy_view(data):
         return data
 
     def test_utils(self):
