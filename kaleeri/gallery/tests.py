@@ -31,7 +31,6 @@ class AlbumTest(TestCase):
         self.assertEqual(subalbum.get_num_photos(), 6)
         self.assertEqual(subalbum.get_max_photos(), 8)
 
-        # Very technically this might fail randomly with an astronomically low probability, I suppose.
         self.assertNotEqual(album.share_id, subalbum.share_id)
 
         self.assertTrue(album.has_user_access(user))
@@ -60,6 +59,9 @@ class AlbumTest(TestCase):
 
         # Anonymous subalbum list
         self.assertJSONError("/album/1/subalbums/")
+
+        # Anonymous album creation
+        self.assertJSONError("/album/create/")
 
         # Login
         response = self.client.post("/login/", {"username": "TestUser", "password": "irrelevant"})
@@ -184,13 +186,12 @@ class AlbumTest(TestCase):
 
         # No need to check that the user was created, trust that Django's authentication system works
 
-        # Album creation page
-        response = self.client.get("/album/create/")
-        self.assertEquals(response.templates[0].name, "album/create.html")
+        # Album creation with invalid data
+        self.assertJSONError("/album/create/")
 
         # Actual album creation
-        response = self.client.post("/album/create/", {"album_name": "Dicta Collectanea"})
-        self.assertEquals(response.status_code, 302)
+        response = self.client.post("/album/create/", {"name": "Dicta Collectanea"})
+        self.assertEquals(response.status_code, 200)
 
         # Check that the album exists
         self.assertEquals(Album.objects.filter(name="Dicta Collectanea").count(), 1)
