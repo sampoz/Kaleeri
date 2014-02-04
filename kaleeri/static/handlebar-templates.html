@@ -12,7 +12,7 @@
 <script id="album_view" type="text/x-handlebars-template">
 <div id="buttons" class="btn-group">
 <a class="btn btn-default" href="/album/create">Create a new album</a>
-<a class="btn btn-default" href="" >Add a new photo</a>
+<a class="btn btn-default" onclick="Kaleeri.addPhoto()" >Add a new photo</a>
 <a class="btn btn-default" onclick="Kaleeri.previousPage()" ><span class="glyphicon glyphicon-chevron-left"></span> Previous Page</a>
 <a class="btn btn-default" onclick="Kaleeri.nextPage()" >Next Page <span class="glyphicon glyphicon-chevron-right"></span></a>
 
@@ -33,9 +33,27 @@
 </script>
 
 <script id="album_details" type="text/x-handlebars-template">
-<div id="details">
+<div class="details">
     <h2>{{ name }}</h2>
     <p>Number of photos: {{ photos }}</p>
     <p>Number of pages: {{ pages }}</p>
 </div>
+</script>
+
+<script id="add_photo" type="text/x-handlebars-template">
+    <div class="add_photo">
+        <label for="photo_url">Photo url:</label>
+        <input id="photo_url" type="text" placeholder="Url address">
+        <a class="btn btn-default" onclick="Kaleeri.modifyPhoto()" >Modify photo</a>
+    </div>
+
+</script>
+
+<script id="modify_photo" type="text/x-handlebars-template">
+    <div class="modify_photo">
+    //TODO: Add something to get some functionality here.....
+
+        <a class="btn btn-default" onclick="Kaleeri.photoToAlbum()" >Add photo to album</a>
+
+    </div>
 </script>
