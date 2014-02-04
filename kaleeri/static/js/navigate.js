@@ -83,6 +83,28 @@ Kaleeri.fadeOutAlbums = function (albumId,pageNumber) {
     });
 };
 
+Kaleeri.addPhoto = function() {
+    $(document).ready(function () {
+            var source = Kaleeri.templates.add_photo;
+            var template = Handlebars.compile(source);
+            var html = template();
+            $("#content-placeholder").html(html);
+    })
+};
+
+Kaleeri.modifyPhoto = function() {
+    $(document).ready(function() {
+        var source = Kaleeri.templates.modify_photo;
+        var template = Handlebars.compile(source);
+        var html = template();
+        $("#content-placeholder").html(html);
+    })
+}
+
+Kaleeri.photoToAlbum = function() {
+
+}
+
 Kaleeri.loadAlbumPhotos = function (albumId, pageNumber) {
     $(document).ready(function () {
         $.getJSON("album/"+albumId +"/", function(data2) {
