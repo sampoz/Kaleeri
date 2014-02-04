@@ -31,7 +31,6 @@ class AlbumTest(TestCase):
         self.assertEqual(subalbum.get_num_photos(), 6)
         self.assertEqual(subalbum.get_max_photos(), 8)
 
-        # Very technically this might fail randomly with an astronomically low probability, I suppose.
         self.assertNotEqual(album.share_id, subalbum.share_id)
 
         self.assertTrue(album.has_user_access(user))
