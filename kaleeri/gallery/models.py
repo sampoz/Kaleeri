@@ -11,7 +11,8 @@ logger = logging.getLogger(__name__)
 
 
 class Album(models.Model):
-    parent = models.ForeignKey('self', blank=True, null=True, help_text="The parent album of the album, if any")
+    parent = models.ForeignKey('self', blank=True, null=True, default=None,
+                               help_text="The parent album of the album, if any")
     owner = models.ForeignKey(django.contrib.auth.models.User, help_text="The owner of the album")
     name = models.CharField(max_length=32, help_text="The name of the album, max. 32 characters")
     created_at = models.DateTimeField(auto_now_add=True, editable=False)

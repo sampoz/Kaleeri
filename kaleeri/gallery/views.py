@@ -8,6 +8,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response, render
 from django.template import RequestContext
+from gallery.forms import AlbumForm
 from .models import Album
 from .utils import render_to_json
 
@@ -131,19 +132,22 @@ def show_page(request, album_id, page_num, share_id=None):
     }
 
 
-@login_required
+@render_to_json()
 def create_album(request):
-    if request.method == 'GET':
-        return render_to_response('album/create.html', {"user": request.user}, context_instance=RequestContext(request))
-    elif request.method == 'POST':
-        logger.info("Creating album '%s' for user %s", request.POST["album_name"], request.user.get_username())
-        album = Album(
-            parent=None,
-            owner=request.user,
-            name=request.POST["album_name"]
-        )
-        album.save()
-        return HttpResponseRedirect('/')
+    if not request.user.is_authenticated():
+        logger.info("Anonymous user tried to create an album")
+        return {"error": "Forbidden"}
+
+    form = AlbumForm(request.POST)
+    if not form.is_valid():
+        logger.info("User %s tried to create album with invalid data", request.user.get_username())
+        return {"error": "Invalid request"}
+
+    logger.info("Creating album '%s' for user %s", request.POST["name"], request.user.get_username())
+    album = form.save(commit=False)
+    album.owner = request.user
+    album.save()
+    return {"id": album.id}
 
 
 @login_required
