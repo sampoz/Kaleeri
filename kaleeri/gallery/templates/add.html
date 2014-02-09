@@ -1,70 +1,78 @@
-
 {% extends "base.html" %}
 {% block title %}Add a photo{% endblock %}
 
 {% block content %}
     <div id="album-form">
-    <h1>Add a photo</h1>
-    <script>
-        var urlStart = "http://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=acdcbe64b4866c6697d07831ecf14842&tags=";
-        var urlEnd = "&safe_search=1&per_page=20&format=json&jsoncallback=?";
-    $( document ).ready( function() {
-        $('#search').keyup(function () {
-        var searchField = $('#search').val();
-        var myExp = new RegExp(searchField, 'i');
-        console.log("keyup");
-        $.getJSON(urlStart + searchField + urlEnd, function (data) {
-            var output;
-            $.each(data, function (key, val) {
-                console.log(data);
-                var images = data;
-                output = "<img height='75' width='75' src='"+ "http://farm"+data.photos.photo[0].farm+".staticflickr.com/"+data.photos.photo[0].server+"/"+data.photos.photo[0].id+"_"+data.photos.photo[0].secret+"_s.jpg'>";
-                console.log(output)
+        <h1>Add a photo</h1>
+        <script>
+
+            function addUrl(url) {
+                $('#url').val(url);
+            }
+            var urlStart = "http://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=acdcbe64b4866c6697d07831ecf14842&tags=";
+            var urlEnd = "&safe_search=1&per_page=20&format=json&jsoncallback=?";
+            $(document).ready(function () {
+
+                $('#search').keyup(function () {
+                    var searchField = $('#search').val();
+                    var myExp = new RegExp(searchField, 'i');
+                    console.log("keyup");
+                    $.getJSON(urlStart + searchField + urlEnd, function (data) {
+                        var output;
+                        $.each(data, function (key, val) {
+
+                            console.log(data);
+                            var images = data;
+                            var url = "http://farm" + data.photos.photo[0].farm + ".staticflickr.com/" + data.photos.photo[0].server + "/" + data.photos.photo[0].id + "_" + data.photos.photo[0].secret + "_s.jpg";
+                            output = "<img height='75' width='75' src='" + url + "'>";
+                        });
+                        console.log(output)
+                        $('#update').append(output);
+                        $('img').click(function () {
+                            addUrl($(this).attr('src'));
+                        });
+                    });
+                });
             });
-            console.log(output)
-            $('#update').append(output);
-        });
-    });
-    });
-    </script>
-    <div id="update"></div>
-    <form action="{% url 'gallery.views.add_photo' %}" method="post">
+        </script>
+        <div id="update"></div>
+        <form action="{% url 'gallery.views.add_photo' %}" method="post">
             {% csrf_token %}
             <label>
                 <ul>
                     Flicker search:
-                    <input name="search" id="search" type="text" placeholder="eg. Cats" >
-                <input class="btn btn-default" type="button" onclick="getFlickerImages" value="Search flicker for photos">
-                <div id="update"></div>
+                    <input name="search" id="search" type="text" placeholder="eg. Cats">
+
+                    <div id="update"></div>
                 </ul>
                 <ul>
                     Photo URL:
-                <input name="url" id="url" type="url" placeholder="http://" >
+                    <input name="url" id="url" type="url" placeholder="http://">
 
                 </ul>
                 <ul>
                     Crop Height:
-                <input name="crop_h" id="crop_h" type="number" placeholder="1">
+                    <input name="crop_h" id="crop_h" type="number" placeholder="1">
                 </ul>
                 <ul>
                     Crop x:
-                <input name="crop_x" id="crop_x" type="number" placeholder="1">
+                    <input name="crop_x" id="crop_x" type="number" placeholder="1">
                 </ul>
                 <ul>
                     Crop y:
-                <input name="crop_y" id="crop_y" type="number" placeholder="1">
+                    <input name="crop_y" id="crop_y" type="number" placeholder="1">
                 </ul>
                 <ul>
                     Crop w:
-                <input name="crop_w" id="crop_w" type="number" placeholder="1">
+                    <input name="crop_w" id="crop_w" type="number" placeholder="1">
                 </ul>
                 <ul>
                     Page Number:
-                <input name="page" id="page" type="number" placeholder="0">
+                    <input name="page" id="page" type="number" placeholder="0">
                 </ul>
                 <ul>
                     Photo Number:
-                <input name="num" id="num" type="number" placeholder="0">
+                    <input name="num" id="num" type="number" placeholder="0">
                 </ul>
             </label>
             <input class="btn btn-default" type="submit" value="add a photo">
