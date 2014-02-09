@@ -6,13 +6,14 @@
     <div id="album-form">
     <h1>Add a photo</h1>
     <script>
-        var url = "http://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=acdcbe64b4866c6697d07831ecf14842&tags=yokota+air+base&safe_search=1&per_page=20&format=json&jsoncallback=?"
+        var urlStart = "http://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=acdcbe64b4866c6697d07831ecf14842&tags=";
+        var urlEnd = "&safe_search=1&per_page=20&format=json&jsoncallback=?";
     $( document ).ready( function() {
         $('#search').keyup(function () {
         var searchField = $('#search').val();
         var myExp = new RegExp(searchField, 'i');
         console.log("keyup");
-        $.getJSON(url, function (data) {
+        $.getJSON(urlStart + searchField + urlEnd, function (data) {
             var output;
             $.each(data, function (key, val) {
                 console.log(data);
