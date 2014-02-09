@@ -145,6 +145,7 @@ def create_album(request):
 
     form = AlbumForm(request.POST)
     if not form.is_valid():
+        logger.info("validation errors were " + str(form.errors))
         logger.info("User %s tried to create album with invalid data", request.user.get_username())
         return render_to_response('index.html', {'user': request.user})
 
@@ -152,7 +153,6 @@ def create_album(request):
     album = form.save(commit=False)
     album.owner = request.user
     album.save()
-    return {"id": album.id}
     return render_to_response('index.html', {'user': request.user})
 
 @login_required

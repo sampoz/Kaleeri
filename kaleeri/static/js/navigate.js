@@ -1,7 +1,7 @@
 window.Kaleeri = {
     "templates": {},
     "urls": {
-        create_album:"/album/create",
+        create_album:"/",
         add_picture:""
     },
     "state": "main"
@@ -66,7 +66,7 @@ Kaleeri.fadeInAlbums= function(){
 
 Kaleeri.loadAlbums = function () {
     $(document).ready(function () {
-        $.getJSON("album/list", function (data) {
+        $.getJSON(window.location.origin+"/album/list", function (data) {
             var source = Kaleeri.templates.album_front;
             var template = Handlebars.compile(source);
             var html = template(data);
