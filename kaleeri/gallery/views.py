@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response, render
 from django.template import RequestContext
 from .forms import AlbumForm
+from .forms import PhotoForm
 from .models import Album
 from .utils import render_to_json
 
@@ -153,6 +154,26 @@ def create_album(request):
     album = form.save(commit=False)
     album.owner = request.user
     album.save()
+    return render_to_response('index.html', {'user': request.user})
+
+
+def add_photo(request):
+    if not request.user.is_authenticated():
+        logger.info("Anonymous user tried to add photo")
+        return {"error": "Forbidden"}
+
+    if request.method == 'GET':
+        return render_to_response("add.html", RequestContext(request))
+
+    form = PhotoForm(request.POST)
+
+    if not form.is_valid():
+        logger.info(str(form.errors))
+        return render_to_response("add.html", {'user': request.user})
+
+    photo = form.save(commit=False)
+    photo.url = request.POST["url"]
+    photo.save()
     return render_to_response('index.html', {'user': request.user})
 
 @login_required

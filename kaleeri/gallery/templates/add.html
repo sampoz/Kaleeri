@@ -1,0 +1,19 @@
+
+{% extends "base.html" %}
+{% block title %}Add a photo{% endblock %}
+
+{% block content %}
+    <div>
+    <form action="{% url 'gallery.views.add_photo' %}" method="post">
+        {% csrf_token %}
+        <div class="add_photo">
+            <label for="url">Photo url:</label>
+            <input id="url" name="url" type="text" placeholder="Url address">
+            <button class="btn btn-default" onclick="Kaleeri.modifyPhoto()" >Modify photo</button>
+        </div>
+        <div id="content-placeholder">
+
+        </div>
+    </form>
+    </div>
+{% endblock content %}

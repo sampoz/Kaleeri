@@ -85,6 +85,7 @@ Kaleeri.fadeOutAlbums = function (albumId,pageNumber) {
 
 Kaleeri.addPhoto = function() {
     $(document).ready(function () {
+
             var source = Kaleeri.templates.add_photo;
             var template = Handlebars.compile(source);
             var html = template();
@@ -94,6 +95,7 @@ Kaleeri.addPhoto = function() {
 
 Kaleeri.modifyPhoto = function() {
     $(document).ready(function() {
+        $.post($("add.html", "#url").serialize());
         var source = Kaleeri.templates.modify_photo;
         var template = Handlebars.compile(source);
         var html = template();
