@@ -9,14 +9,34 @@
     <form action="{% url 'gallery.views.add_photo' %}" method="post">
             {% csrf_token %}
             <label>
-                Photo URL:
-                <input name="url" id="url" type="url" placeholder="http://">
+                <ul>
+                    Photo URL:
+                <input name="url" id="url" type="url" placeholder="http://" >
+                </ul>
+                <ul>
+                    Crop Height:
                 <input name="crop_h" id="crop_h" type="number" placeholder="1">
+                </ul>
+                <ul>
+                    Crop x:
                 <input name="crop_x" id="crop_x" type="number" placeholder="1">
+                </ul>
+                <ul>
+                    Crop y:
                 <input name="crop_y" id="crop_y" type="number" placeholder="1">
+                </ul>
+                <ul>
+                    Crop w:
                 <input name="crop_w" id="crop_w" type="number" placeholder="1">
+                </ul>
+                <ul>
+                    Page Number:
                 <input name="page" id="page" type="number" placeholder="0">
+                </ul>
+                <ul>
+                    Photo Number:
                 <input name="num" id="num" type="number" placeholder="0">
+                </ul>
             </label>
             <input class="btn btn-default" type="submit" value="add a photo">
             {% if errors|length >= 1 %}
