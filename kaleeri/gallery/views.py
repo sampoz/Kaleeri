@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import logging
+from django.core.context_processors import csrf
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Count
 from django.http import HttpResponseRedirect
@@ -8,7 +9,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response, render
 from django.template import RequestContext
-from gallery.forms import AlbumForm
+from .forms import AlbumForm
 from .models import Album
 from .utils import render_to_json
 
@@ -132,23 +133,27 @@ def show_page(request, album_id, page_num, share_id=None):
     }
 
 
-@render_to_json()
+#@render_to_json()
 def create_album(request):
+    logger.info("new album create started")
     if not request.user.is_authenticated():
         logger.info("Anonymous user tried to create an album")
         return {"error": "Forbidden"}
 
+    if request.method == 'GET':
+        return render_to_response("album/create.html", RequestContext(request))
+
     form = AlbumForm(request.POST)
     if not form.is_valid():
         logger.info("User %s tried to create album with invalid data", request.user.get_username())
-        return {"error": "Invalid request"}
+        return render_to_response('index.html', {'user': request.user})
 
     logger.info("Creating album '%s' for user %s", request.POST["name"], request.user.get_username())
     album = form.save(commit=False)
     album.owner = request.user
     album.save()
     return {"id": album.id}
-
+    return render_to_response('index.html', {'user': request.user})
 
 @login_required
 def user_account(request):
