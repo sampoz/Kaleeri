@@ -134,7 +134,6 @@ def show_page(request, album_id, page_num, share_id=None):
     }
 
 
-#@render_to_json()
 def create_album(request):
     logger.info("new album create started")
     if not request.user.is_authenticated():
@@ -163,17 +162,18 @@ def add_photo(request):
         return {"error": "Forbidden"}
 
     if request.method == 'GET':
-        return render_to_response("add.html", RequestContext(request))
+        return render_to_response("add.html", {}, context_instance=RequestContext(request))
 
     form = PhotoForm(request.POST)
 
     if not form.is_valid():
         logger.info(str(form.errors))
-        return render_to_response("add.html", {'user': request.user})
+        return render_to_response("add.html", {'user': request.user, 'errors' : str(form.errors)}, context_instance=RequestContext(request))
 
     photo = form.save(commit=False)
     photo.url = request.POST["url"]
     photo.save()
+    logger.info("added new photo")
     return render_to_response('index.html', {'user': request.user})
 
 @login_required

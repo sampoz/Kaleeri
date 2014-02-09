@@ -3,17 +3,26 @@
 {% block title %}Add a photo{% endblock %}
 
 {% block content %}
-    <div>
-    <form action="{% url 'gallery.views.add_photo' %}" method="post">
-        {% csrf_token %}
-        <div class="add_photo">
-            <label for="url">Photo url:</label>
-            <input id="url" name="url" type="text" placeholder="Url address">
-            <button class="btn btn-default" onclick="Kaleeri.modifyPhoto()" >Modify photo</button>
-        </div>
-        <div id="content-placeholder">
+    <div id="album-form">
+    <h1>Add a photo</h1>
 
-        </div>
-    </form>
+    <form action="{% url 'gallery.views.add_photo' %}" method="post">
+            {% csrf_token %}
+            <label>
+                Photo URL:
+                <input name="url" id="url" type="url" placeholder="http://">
+                <input name="crop_h" id="crop_h" type="number" placeholder="1">
+                <input name="crop_x" id="crop_x" type="number" placeholder="1">
+                <input name="crop_y" id="crop_y" type="number" placeholder="1">
+                <input name="crop_w" id="crop_w" type="number" placeholder="1">
+                <input name="page" id="page" type="number" placeholder="0">
+                <input name="num" id="num" type="number" placeholder="0">
+            </label>
+            <input class="btn btn-default" type="submit" value="add a photo">
+            {% if errors|length >= 1 %}
+                <p> {{ errors }} </p>
+            {% endif %}
+        </form>
     </div>
+
 {% endblock content %}
