@@ -4,6 +4,8 @@
 {% block content %}
     <div id="album-form">
         <h1>Add a photo</h1>
+        <script src="/static/js/ruoska.js"></script>
+        <link rel="stylesheet" href="/static/css/ruoska.css">
         <script>
 
             function addUrl(url) {
@@ -29,7 +31,14 @@
                         console.log(output)
                         $('#update').append(output);
                         $('img').click(function () {
-                            addUrl($(this).attr('src'));
+                            var ruoskaThis = $(this).attr('src');
+                            addUrl(ruoskaThis);
+                            $('#update').empty();
+                            singleImage= output.replace("<img height='75' width='75'", "<img height='650' width='650'").replace("_s.jpg","_z.jpg");
+                            console.log(singleImage);
+                            $('#update').append(singleImage);
+                            $('#update img').ruoska();
+
                         });
                     });
                 });
