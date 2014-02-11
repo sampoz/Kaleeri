@@ -1,3 +1,41 @@
+####Students:
+Anssi Matti Helin <student_id>
+
+Sampsa Laapotti <stundent_id>
+
+Osmo Maksimainen 84706E
+
+####Features
+
+* Authentication - 200p             
+* Basic album functionalities - 400p
+* Public link to photo albums - ????
+* Order albums - ?????
+* Integrate with an image service API (Flickr) - 80p
+* 3rd party login - 80p
+* Use of Ajax - 100p
+* EXTRA: ruoska.js - 100p
+
+We had too big plans for this project from day 1. We tried to make whole site work as a single page app, but it just took a lot of time from normal development so we had to just scrap the idea. Because of this, we had to hurry some parts of the development and there is still a few known bugs. One of those is that templates are not loaded when the page is loaded. One of the best things is our photocropping js-library (ruoska.js credits to Helin for making this). It is just great way to crop photos and it is easy to use, just drag the box over the photo! Coding the basic functionalities was one of the difficultiest one, because there was not enough time to do them just the way we would have wanted to. 
+
+####Who did what
+Helin:
+backend, fronted, ruoska.js
+
+Laapotti:
+backend, frontend
+
+Maksimainen:
+frontend, ux
+
+
+####Instructions
+
+run foo bar
+
+=============
+=============
+
 group-36-2013
 =============
 
