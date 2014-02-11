@@ -43,9 +43,10 @@
                         $('#update').append(output);
                         $('img').click(function () {
                             var ruoskaThis = $(this).attr('src');
+                            console.log(" our clicked image is " + ruoskaThis);
                             addUrl(ruoskaThis);
                             $('#update').empty();
-                            singleImage= output.replace("<img height='75' width='75'", "<img height='650' width='650'").replace("_s.jpg","_z.jpg");
+                            singleImage=  "<img height='650' width='650' src='" + ruoskaThis.replace("_s.jpg","_z.jpg")+"' >";
                             console.log(singleImage);
                             $('#update').append(singleImage);
                             $('#update img').ruoska();
@@ -89,12 +90,9 @@
                 </ul>
                 <ul>
                     Page Number:
-                    <input name="page" id="page" type="number" placeholder="0">
+                    <input name="page" id="page" type="number" placeholder="1" value="1">
                 </ul>
-                <ul>
-                    Photo Number:
-                    <input name="num" id="num" type="number" placeholder="0">
-                </ul>
+
             </label>
             <input class="btn btn-default" type="submit" value="add a photo">
             {% if errors|length >= 1 %}
