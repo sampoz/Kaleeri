@@ -1,7 +1,7 @@
 ####Students:
 Anssi Matti Helin <student_id>
 
-Sampsa Laapotti <stundent_id>
+Sampsa Laapotti 293545
 
 Osmo Maksimainen 84706E
 
