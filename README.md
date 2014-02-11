@@ -16,6 +16,9 @@ Osmo Maksimainen 84706E
 * Use of Ajax - 100p
 * EXTRA: ruoska.js - 100p
 
+
+We had too big plans for this project from day 1. We tried to make whole site work as a single page app, but it just took a lot of time from normal development so we had to just scrap the idea. Because of this, we had to hurry some parts of the development and there is still a few known bugs. One of those is that templates are not loaded when the page is loaded. One of the best things is our photocropping js-library (ruoska.js credits to Helin for making this). It is just great way to crop photos and it is easy to use, just drag the box over the photo! Coding the basic functionalities was one of the difficultiest one, because there was not enough time to do them just the way we would have wanted to. 
+
 ####Technologies
 
 * Django
@@ -23,8 +26,6 @@ Osmo Maksimainen 84706E
 * CSS3
 * handlebars.js (for templates)
 * ruoska.js (self-made photocropping tool)
-
-We had too big plans for this project from day 1. We tried to make whole site work as a single page app, but it just took a lot of time from normal development so we had to just scrap the idea. Because of this, we had to hurry some parts of the development and there is still a few known bugs. One of those is that templates are not loaded when the page is loaded. One of the best things is our photocropping js-library (ruoska.js credits to Helin for making this). It is just great way to crop photos and it is easy to use, just drag the box over the photo! Coding the basic functionalities was one of the difficultiest one, because there was not enough time to do them just the way we would have wanted to. 
 
 ####Known bugs
 
