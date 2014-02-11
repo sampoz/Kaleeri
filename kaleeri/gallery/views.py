@@ -7,14 +7,16 @@ from django.db.models import Count
 from django.http import HttpResponseRedirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render_to_response, render
+from django.shortcuts import render_to_response, render, redirect
 from django.template import RequestContext
+from django.core.urlresolvers import reverse
 from .forms import AlbumForm
 from .forms import PhotoForm
 from .models import Album
 from .utils import render_to_json
 from models import AlbumPage
 from models import PageLayout
+
 
 logger = logging.getLogger(__name__)
 
@@ -167,7 +169,8 @@ def create_album(request):
     page.album = album
     page.num = 1
     page.save()
-    return render_to_response('index.html', {'user': request.user})
+    url = request.build_absolute_uri(reverse("home"))
+    return redirect(url)
 
 
 def add_photo(request):
@@ -188,7 +191,9 @@ def add_photo(request):
     photo.url = request.POST["url"]
     photo.save()
     logger.info("added new photo")
-    return render_to_response('index.html', {'user': request.user})
+    url = request.build_absolute_uri(reverse("home"))
+    return redirect(url)
+
 
 @login_required
 def user_account(request):
