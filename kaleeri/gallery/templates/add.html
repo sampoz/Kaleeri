@@ -11,6 +11,17 @@
             function addUrl(url) {
                 $('#url').val(url);
             }
+            function getDataFromRuoska(){
+                var image = $('#update img')[0];
+                var crop_h = document.getElementById("crop_h");
+                var crop_x = document.getElementById("crop_x");
+                var crop_y = document.getElementById("crop_y");
+                var crop_w = document.getElementById("crop_w");
+                crop_h.value = image.crop_h;
+                crop_x.value = image.crop_x;
+                crop_y.value = image.crop_y;
+                crop_w.value = image.crop_w;
+            }
             var urlStart = "http://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=acdcbe64b4866c6697d07831ecf14842&tags=";
             var urlEnd = "&safe_search=1&per_page=20&format=json&jsoncallback=?";
             $(document).ready(function () {
@@ -54,6 +65,7 @@
 
                     <div id="update"></div>
                 </ul>
+                <input class="btn btn-default" type="button" onclick="getDataFromRuoska()" value="use this photo">
                 <ul>
                     Photo URL:
                     <input name="url" id="url" type="url" placeholder="http://">
