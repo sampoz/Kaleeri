@@ -13,7 +13,8 @@ from .forms import AlbumForm
 from .forms import PhotoForm
 from .models import Album
 from .utils import render_to_json
-
+from models import AlbumPage
+from models import PageLayout
 
 logger = logging.getLogger(__name__)
 
@@ -153,6 +154,19 @@ def create_album(request):
     album = form.save(commit=False)
     album.owner = request.user
     album.save()
+
+    page = AlbumPage()
+    if PageLayout.objects.count() < 1:
+        layout = PageLayout()
+        layout.name="start"
+        layout.num_photos=3
+        layout.save()
+    else:
+        layout = PageLayout.objects.get(name="start")
+    page.layout = layout
+    page.album = album
+    page.num = 1
+    page.save()
     return render_to_response('index.html', {'user': request.user})
 
 
