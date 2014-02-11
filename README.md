@@ -27,11 +27,14 @@ Public links should not allow editing of albums
 
 * Share albums (max 80 points)
 Allow users to easily post a public link to a photo album to Twitter, Google+, or other similar services.
-Order albums (mandatory, 50-200 points)
+
+* Order albums (mandatory, 50-200 points)
 Allow users to create orders from albums and to use our internal payment service to pay orders before accepting them. See http://payments.webcourse.niksula.hut.fi/ to find more about the payments service. Optionally order handling etc.
-Integrate with an image service API (max 100 points)
+
+* Integrate with an image service API (max 100 points)
 Use the Flickr API or some other image service API to allow users to search images when adding images to pages.
-3rd party login (max 100 points)
+
+* 3rd party login (max 100 points)
 Allow OpenID, Gmail or Facebook login to your system. Hint: Think what information you get from third party login services and if some extra information is also needed. This is the only feature where you are supposed to use third party Django apps in your service.
 
 * Use of Ajax (max 100 points)
