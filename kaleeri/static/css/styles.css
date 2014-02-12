@@ -97,6 +97,7 @@ body {
 
 .missing {
     background-color: #bfb3a1;
+    box-shadow: black 3px 3px 1px;
 }
 
 .missing a {
@@ -112,4 +113,8 @@ body {
 
 .missing a:hover {
     color: #ffdead;
+}
+
+.spinner {
+    background: url('/static/img/ajax-loader.gif') center center no-repeat;
 }

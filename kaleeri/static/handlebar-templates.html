@@ -23,7 +23,7 @@
     <a class="btn btn-default" onclick="Kaleeri.nextPage()" >Next Page <span class="glyphicon glyphicon-chevron-right"></span></a>
 </div>
 
-<div id="album_content" class="{{ layout_class }} spinner">Loading...</div>
+<div id="album_content" class="{{ layout_class }}"></div>
 </script>
 
 <script id="photo_block" type="text/x-handlebars-template">
@@ -53,9 +53,10 @@
 
 <script id="add_photo" type="text/x-handlebars-template">
 <div class="add_photo">
-    <label for="photo_url">Photo url:</label>
+    <p>Adding photo to slot {{ photoNumber }} on page {{ pageNumber }} on album {{ albumName }}.</p>
+    <label for="photo_url">Photo URL:</label>
     <input id="photo_url" type="text" placeholder="Url address">
-    <button class="btn btn-default" onclick="Kaleeri.modifyPhoto()">Modify photo</button>
+    <button class="btn btn-default" onclick="Kaleeri.submitAddPhoto()">Modify photo</button>
 </div>
 </script>
 

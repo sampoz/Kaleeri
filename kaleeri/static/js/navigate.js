@@ -31,21 +31,30 @@ function loadHash() {
     }
 
     else if (state[0] == "album") {
-        if (state.length > 2) {
+        if (state.length == 7) {
             ret = {
-                "view": "albumPhotos",
-                "parameter": {
-                    "albumId": parseInt(state[1], 10),
-                    "pageNumber": parseInt(state[3], 10)
+                view: "addPhoto",
+                parameter: {
+                    albumId: parseInt(state[1], 10),
+                    pageNumber: parseInt(state[3], 10),
+                    photoNumber: parseInt(state[5], 10)
                 }
             };
-        } else {
-            // TODO: Album front page
+        } else if (state.length == 4) {
             ret = {
-                "view": "albumPhotos",
-                "parameter": {
-                    "albumId": parseInt(state[1], 10),
-                    "pageNumber": 1
+                view: "albumPhotos",
+                parameter: {
+                    albumId: parseInt(state[1], 10),
+                    pageNumber: parseInt(state[3], 10)
+                }
+            };
+        } else if (state.length == 2) {
+            // TODO: Separate album front page and single page views
+            ret = {
+                view: "albumPhotos",
+                parameter: {
+                    albumId: parseInt(state[1], 10),
+                    pageNumber: 1
                 }
             };
         }
@@ -54,8 +63,8 @@ function loadHash() {
     loadState(ret);
 }
 
-function loadState(stateToLoad) {
-    switch (stateToLoad.view) {
+function loadState(state) {
+    switch (state.view) {
         case "main":
             Kaleeri.loadFrontPage();
             break;
@@ -65,27 +74,14 @@ function loadState(stateToLoad) {
             break;
 
         case "albumPhotos":
-            Kaleeri.loadAlbumPage(stateToLoad.parameter.albumId, stateToLoad.parameter.pageNumber);
+            Kaleeri.loadAlbumPage(state.parameter.albumId, state.parameter.pageNumber);
+            break;
+
+        case "addPhoto":
+            Kaleeri.loadAddPhoto(state.parameter.albumId, state.parameter.pageNumber, state.parameter.photoNumber);
             break;
     }
 }
-
-$(function () {
-    $(document.createElement("div")).load(
-        "/static/handlebar-templates.html",
-        function () {
-            $(this).find("script").each(function (i, e) {
-                Kaleeri.templates[e.id] = e.innerHTML;
-            });
-        }
-    );
-
-    if (location.hash) {
-        loadHash();
-    } else {
-        loadState({"view": "main"});
-    }
-});
 
 Kaleeri.nextPage = function () {
     if (Kaleeri.currentAlbum === null) { return; }
@@ -151,18 +147,32 @@ Kaleeri.modifyPhoto = function () {
     })
 };
 
+Kaleeri.loadAddPhoto = function (albumId, pageNumber, photoNumber) {
+    $(document).ready(function () {
+        var template = Handlebars.compile(Kaleeri.templates.add_photo);
+        $("#content-placeholder").html(template({
+            albumId: albumId,
+            albumName: Kaleeri.currentAlbum.name,
+            pageNumber: pageNumber,
+            photoNumber: photoNumber
+        }));
+    });
+};
+
 Kaleeri.photoToAlbum = function () {
 
 };
 
 Kaleeri.loadAlbumPage = function (albumId, pageNumber) {
     $(document).ready(function () {
+        $("#content-placeholder").empty().addClass("spinner");
+
         $.getJSON("album/" + albumId + "/", function (data) {
             Kaleeri.currentAlbum = data;
             var source = Kaleeri.templates.album_details;
             var template = Handlebars.compile(source);
             var html = template(data);
-            $("#content-placeholder").html(html);
+            $("#content-placeholder").removeClass("spinner").html(html);
         });
 
         $.getJSON("album/" + albumId + "/page/" + pageNumber, function (data) {
@@ -197,3 +207,20 @@ Kaleeri.loadAlbumPage = function (albumId, pageNumber) {
         });
     });
 };
+
+$(function () {
+    $(document.createElement("div")).load(
+        "/static/handlebar-templates.html",
+        function () {
+            $(this).find("script").each(function (i, e) {
+                Kaleeri.templates[e.id] = e.innerHTML;
+            });
+        }
+    );
+
+    if (location.hash) {
+        loadHash();
+    } else {
+        loadState({"view": "main"});
+    }
+});
