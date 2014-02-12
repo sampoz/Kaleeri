@@ -15,6 +15,11 @@ window.Kaleeri = {
     }
 };
 
+Handlebars.registerHelper('plural', function(num) {
+    if (num == 1) { return ""; }
+    return "s";
+});
+
 window.addEventListener("hashchange", loadHash);
 
 function loadHash() {
