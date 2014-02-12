@@ -1,5 +1,10 @@
+.navbar {
+    background-color: rgba(0, 0, 0, 0.4);
+    padding-bottom: .25em;
+}
+
 #topic {
-    float:left;
+    float: left;
     padding-left: 2em;
     padding-top: 1em;
 }
@@ -22,7 +27,7 @@ section h2 {
 }
 
 #footer-text {
-    float:right;
+    float: right;
 }
 
 #base-text > p {
@@ -35,12 +40,14 @@ section h2 {
 
 body {
     padding-bottom: 30px;
+    background: url('/static/img/bg.png') top left repeat;
 }
 
-#login-form, #album-form{
-  max-width: 300px;
-  margin: 0 auto;
+#login-form, #album-form {
+    max-width: 300px;
+    margin: 0 auto;
 }
+
 #base-logged-in {
     margin: 0 auto;
     max-width: 80%;
@@ -49,11 +56,13 @@ body {
 #buttons {
     padding-bottom: 1em;
 }
-.img-container{
+
+.img-container {
+    width: 250px;
     height: 250px;
     display: table-cell;
     vertical-align: middle;
-
+    text-align: center;
 }
 
 .img-container > img {
@@ -63,21 +72,44 @@ body {
 
 #id_username, #id_password, #id_password1, #id_password2, #album_name {
     display: block;
-width: 100%;
-height: 34px;
-padding: 6px 12px;
-font-size: 14px;
-line-height: 1.428571429;
-color: #555;
-vertical-align: middle;
-background-color: #fff;
-background-image: none;
-border: 1px solid #ccc;
-border-radius: 4px;
--webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
--webkit-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.428571429;
+    color: #555;
+    vertical-align: middle;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 }
 
+.layout-fourpage .photo-container {
+    width: 45%;
+    float: left;
+    margin-top: 1em;
+}
+
+.missing {
+    background-color: #bfb3a1;
+}
+
+.missing a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding-top: 47%;
+    color: black;
+    text-decoration: underline;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.missing a:hover {
+    color: #ffdead;
+}

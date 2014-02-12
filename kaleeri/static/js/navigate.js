@@ -65,7 +65,7 @@ function loadState(stateToLoad) {
             break;
 
         case "albumPhotos":
-            Kaleeri.loadAlbumPhotos(stateToLoad.parameter.albumId, stateToLoad.parameter.pageNumber);
+            Kaleeri.loadAlbumPage(stateToLoad.parameter.albumId, stateToLoad.parameter.pageNumber);
             break;
     }
 }
@@ -109,10 +109,6 @@ Kaleeri.previousPage = function () {
     location.hash = "#" + state.join("/");
 };
 
-Kaleeri.fadeInAlbums = function () {
-    $("#content-placeholder").fadeIn();
-};
-
 Kaleeri.loadFrontPage = function () {
     // TODO: Actual front page for logged-in users
     Kaleeri.loadAlbums();
@@ -132,7 +128,7 @@ Kaleeri.loadAlbums = function () {
 Kaleeri.fadeOutAlbums = function (albumId, pageNumber) {
     Kaleeri.parseAlbumId();
     $("#content-placeholder").fadeOut(300, function () {
-        Kaleeri.loadAlbumPhotos(albumId, pageNumber);
+        Kaleeri.loadAlbumPage(albumId, pageNumber);
     });
 };
 
@@ -159,7 +155,7 @@ Kaleeri.photoToAlbum = function () {
 
 };
 
-Kaleeri.loadAlbumPhotos = function (albumId, pageNumber) {
+Kaleeri.loadAlbumPage = function (albumId, pageNumber) {
     $(document).ready(function () {
         $.getJSON("album/" + albumId + "/", function (data) {
             Kaleeri.currentAlbum = data;
@@ -173,8 +169,31 @@ Kaleeri.loadAlbumPhotos = function (albumId, pageNumber) {
             var source = Kaleeri.templates.album_view;
             var template = Handlebars.compile(source);
             var html = template(data);
-            $("#content-placeholder").append(html);
-            Kaleeri.fadeInAlbums();
+            $("#content-placeholder").append(html).fadeIn();
+
+            var photo_template = Handlebars.compile(Kaleeri.templates.photo_block);
+            var photo_map = {};
+
+            var i;
+            for (i = 1; i <= data.max_photos; ++i) {
+                photo_map[i] = {
+                    "url": null,
+                    "caption": null,
+                    "num": i
+                };
+            }
+
+            for (i = 0; i < data.photos.length; ++i) {
+                photo_map[data.photos[i].num] = data.photos[i];
+            }
+
+            $album_content = $('#album_content');
+            $album_content.empty();
+            for (i = 1; i <= data.max_photos; ++i) {
+                photo_map[i].album = albumId;
+                photo_map[i].page = pageNumber;
+                $album_content.append(photo_template(photo_map[i]));
+            }
         });
     });
 };

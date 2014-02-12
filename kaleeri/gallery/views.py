@@ -131,9 +131,12 @@ def show_page(request, album_id, page_num, share_id=None):
             {
                 "url": photo.url,
                 "caption": photo.caption,
+                "num": photo.num,
                 "crop": [photo.crop_x, photo.crop_y, photo.crop_w, photo.crop_h]
             } for photo in result_page.photo_set.all()
-        ]
+        ],
+        "max_photos": result_page.layout.num_photos,
+        "layout_class": result_page.layout.css_class
     }
 
 

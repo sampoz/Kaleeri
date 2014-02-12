@@ -67,7 +67,7 @@
         "pk": 1,
         "model": "gallery.pagelayout",
         "fields": {
-            "css_class": "layout_fourpage",
+            "css_class": "container-fluid layout-fourpage",
             "num_photos": 4,
             "name": "Four per page"
         }

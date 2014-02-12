@@ -23,24 +23,31 @@
     <a class="btn btn-default" onclick="Kaleeri.nextPage()" >Next Page <span class="glyphicon glyphicon-chevron-right"></span></a>
 </div>
 
-<div class="row">
-    {{#photos}}
-        <div class="col-md-2" id="container">
-            <div class="img-container" onclick="">
+<div id="album_content" class="{{ layout_class }} spinner">Loading...</div>
+</script>
+
+<script id="photo_block" type="text/x-handlebars-template">
+    <div class="photo-container" id="photo-{{ num }}">
+        <div class="img-container{{#unless url}} missing{{/unless}}" onclick="">
+            {{#if url}}
                 <img src="{{ url }}">
-            </div>
-            <div class="caption-container">
-                <p>{{ caption }}</p>
-            </div>
+            {{else}}
+                <a href="#album/{{ album }}/page/{{ page }}/photo/{{ num }}/add">No photo yet &#9785;</a>
+            {{/if}}
         </div>
-    {{/photos}}
-</div>
+        <div class="caption-container">
+            <p>{{#if caption}}{{ caption }}{{ else }}No caption{{/if}}</p>
+        </div>
+    </div>
 </script>
 
 <script id="album_details" type="text/x-handlebars-template">
 <div class="details">
     <h2>{{ name }}</h2>
-    <p>{{ photos }} photo{{{plural photos}}} on {{ pages }} page{{{plural pages}}}</p>
+    <p>
+        Page <span class="pagenum">1</span> / {{ pages}} &ndash;
+        {{ photos }} photo{{{plural photos}}} on {{ pages }} page{{{plural pages}}}
+    </p>
 </div>
 </script>
 
