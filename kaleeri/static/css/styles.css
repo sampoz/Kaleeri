@@ -107,7 +107,10 @@ body {
     color: #ffdead;
 }
 
-.spinner {
-    background: url('/static/img/ajax-loader.gif') top left no-repeat;
-    background-size: cover;
+#spinner {
+    display: none;
+}
+
+#share_bar {
+    margin-left: .25em;
 }

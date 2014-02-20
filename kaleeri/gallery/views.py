@@ -136,7 +136,8 @@ def show_page(request, album_id, page_num, share_id=None):
             } for photo in result_page.photo_set.all()
         ],
         "max_photos": result_page.layout.num_photos,
-        "layout_class": result_page.layout.css_class
+        "layout_class": result_page.layout.css_class,
+        "share_id": album.share_id
     }
 
 
