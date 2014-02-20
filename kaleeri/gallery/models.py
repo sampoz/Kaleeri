@@ -68,7 +68,7 @@ class AlbumPage(models.Model):
 class Photo(models.Model):
     page = models.ForeignKey(AlbumPage, help_text="The album page this photo is on")
     url = models.URLField(help_text="The URL of the image on an external service")
-    num = models.IntegerField(help_text="The number of the photo in the page layout")
+    num = models.AutoField(help_text="The number of the photo in the page layout", primary_key=True)
     caption = models.TextField(blank=True, help_text="The optional caption of the image")
     crop_x = models.IntegerField(help_text="The starting X coordinate of the image crop")
     crop_y = models.IntegerField(help_text="The starting Y coordinate of the image crop")

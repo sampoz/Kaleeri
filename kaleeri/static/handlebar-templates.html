@@ -1,59 +1,67 @@
 <script id="album_front" type="text/x-handlebars-template">
 <div id="buttons" class="btn-group">
-<a class="btn btn-default" href="/album/create">Create a new album</a>
+    <a class="btn btn-default" href="/album/create">Create a new album</a>
 </div>
 <div class="row">
     {{#albums}}
-        <div class="col-md-3" onclick="Kaleeri.fadeOutAlbums({{ id }},1)"><img src="" alt="?"><br>{{name}}</div>
+        <div class="col-md-3">
+            <a href="#album/{{ id }}/page/1">
+                <img src="" alt="?">
+                <br />
+                {{name}}
+            </a>
+        </div>
     {{/albums}}
 </div>
 </script>
 
 <script id="album_view" type="text/x-handlebars-template">
 <div id="buttons" class="btn-group">
-<a class="btn btn-default" href="/album/create">Create a new album</a>
-<a class="btn btn-default" href="/add/" >Add a new photo</a>
-<a class="btn btn-default" onclick="Kaleeri.previousPage()" ><span class="glyphicon glyphicon-chevron-left"></span> Previous Page</a>
-<a class="btn btn-default" onclick="Kaleeri.nextPage()" >Next Page <span class="glyphicon glyphicon-chevron-right"></span></a>
-
+    <a class="btn btn-default" href="/album/create">Create a new album</a>
+    <a class="btn btn-default" id="add-button" href="/add/" >Add a new photo</a>
+    <a class="btn btn-default" onclick="Kaleeri.previousPage()" ><span class="glyphicon glyphicon-chevron-left"></span> Previous Page</a>
+    <a class="btn btn-default" onclick="Kaleeri.nextPage()" >Next Page <span class="glyphicon glyphicon-chevron-right"></span></a>
 </div>
-    <div class="row">
-    {{#photos}}
-        <div class="col-md-2" id="container">
-            <div class="img-container" onclick="">
-                <img src="{{ url }}" >
-            </div>
-            <div class="caption-container">
-                <p>{{ caption }}</p>
-            </div>
-        </div>
 
-    {{/photos}}
+<div id="album_content" class="{{ layout_class }}"></div>
+</script>
+
+<script id="photo_block" type="text/x-handlebars-template">
+    <div class="photo-container" id="photo-{{ num }}">
+        <div class="img-container{{#unless url}} missing{{/unless}}" onclick="">
+            {{#if url}}
+                <img src="{{ url }}">
+            {{else}}
+                <a href="#album/{{ album }}/page/{{ page }}/photo/{{ num }}/add">No photo yet &#9785;</a>
+            {{/if}}
+        </div>
+        <div class="caption-container">
+            <p>{{#if caption}}{{ caption }}{{ else }}No caption{{/if}}</p>
+        </div>
     </div>
 </script>
 
 <script id="album_details" type="text/x-handlebars-template">
 <div class="details">
     <h2>{{ name }}</h2>
-    <p>Number of photos: {{ photos }}</p>
-    <p>Number of pages: {{ pages }}</p>
+    <p>
+        Page <span class="pagenum">1</span> / {{ pages}} &ndash;
+        {{ photos }} photo{{{plural photos}}} on {{ pages }} page{{{plural pages}}}
+    </p>
 </div>
 </script>
 
 <script id="add_photo" type="text/x-handlebars-template">
-    <div class="add_photo">
-        <label for="photo_url">Photo url:</label>
-        <input id="photo_url" type="text" placeholder="Url address">
-        <button class="btn btn-default" onclick="Kaleeri.modifyPhoto()" >Modify photo</button>
-    </div>
-
+<div class="add_photo">
+    <p>Adding photo to slot {{ photoNumber }} on page {{ pageNumber }} on album {{ albumName }}.</p>
+    <label for="photo_url">Photo URL:</label>
+    <input id="photo_url" type="text" placeholder="Url address">
+    <button class="btn btn-default" onclick="Kaleeri.submitAddPhoto()">Modify photo</button>
+</div>
 </script>
 
 <script id="modify_photo" type="text/x-handlebars-template">
-    <div class="modify_photo">
-    //TODO: Add something to get some functionality here.....
-
-        <button class="btn btn-default" onclick="Kaleeri.photoToAlbum()" >Add photo to album</button>
-
-    </div>
+<div class="modify_photo">
+    <button class="btn btn-default" onclick="Kaleeri.photoToAlbum()">Add photo to album</button>
+</div>
 </script>

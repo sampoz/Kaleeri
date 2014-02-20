@@ -131,9 +131,12 @@ def show_page(request, album_id, page_num, share_id=None):
             {
                 "url": photo.url,
                 "caption": photo.caption,
+                "num": photo.num,
                 "crop": [photo.crop_x, photo.crop_y, photo.crop_w, photo.crop_h]
             } for photo in result_page.photo_set.all()
-        ]
+        ],
+        "max_photos": result_page.layout.num_photos,
+        "layout_class": result_page.layout.css_class
     }
 
 
@@ -174,11 +177,14 @@ def create_album(request):
 
 
 def add_photo(request):
+    logger.info(request.path)
+    album_number = 0
     if not request.user.is_authenticated():
         logger.info("Anonymous user tried to add photo")
         return {"error": "Forbidden"}
 
     if request.method == 'GET':
+        album_number = request.get("album")
         return render_to_response("add.html", {}, context_instance=RequestContext(request))
 
     form = PhotoForm(request.POST)
@@ -189,6 +195,7 @@ def add_photo(request):
 
     photo = form.save(commit=False)
     photo.url = request.POST["url"]
+    photo.album = Album.objects.get(pk=album_number)
     photo.save()
     logger.info("added new photo")
     url = request.build_absolute_uri(reverse("home"))

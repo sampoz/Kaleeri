@@ -4,69 +4,110 @@ window.Kaleeri = {
         create_album: "/",
         add_picture: ""
     },
-    "state": "main"
-};
-var state = {
-    "view": "main",
-    "parameter": ""
-};
-
-window.addEventListener("popstate", function (e) {
-    console.log(location.hash);
-    loadState(event.state);
-});
-
-
-
-function loadState(stateToLoad) {
-    console.log("loading" + history.state.view + " and next state is" + stateToLoad.view);
-    console.log(stateToLoad);
-
-    switch (stateToLoad.view) {
-        case "main" :
-        {
-            console.log("loading main");
-            return;
-        }
-        case "album" :
-        {
-            console.log("loading album");
-            Kaleeri.loadAlbums();
-            return;
-        }
-        case "albumPhotos":
-        {
-            console.log("loading album photos");
-            Kaleeri.loadAlbumPhotos(stateToLoad.parameter.albumId, stateToLoad.parameter.pageNumber);
-            return;
+    "currentAlbum": null,
+    "parseAlbumId": function () {
+        var $add_button = $("#add-button");
+        if ($add_button.length) {
+            var add_photo_url = $add_button.attr("href");
+            var albumNumber = /album\/(\d+)\//.exec(location.href);
+            $add_button.attr("href", add_photo_url + albumNumber);
         }
     }
-}
-$(function () {
-    $(document.createElement("div")).load(
-        "/static/handlebar-templates.html",
-        function () {
-            $(this).find("script").each(function (i, e) {
-                Kaleeri.templates[e.id] = e.innerHTML;
-            });
-        }
-    );
+};
+
+Handlebars.registerHelper('plural', function(num) {
+    if (num == 1) { return ""; }
+    return "s";
 });
 
+window.addEventListener("hashchange", loadHash);
+
+function loadHash() {
+    var state = location.hash.substr(1).split("/");
+    var ret;
+
+    if (state[0] == "" || state[0] == "main") {
+        ret = {"view": "main", "parameter": {}};
+    }
+
+    else if (state[0] == "album") {
+        if (state.length == 7) {
+            ret = {
+                view: "addPhoto",
+                parameter: {
+                    albumId: parseInt(state[1], 10),
+                    pageNumber: parseInt(state[3], 10),
+                    photoNumber: parseInt(state[5], 10)
+                }
+            };
+        } else if (state.length == 4) {
+            ret = {
+                view: "albumPhotos",
+                parameter: {
+                    albumId: parseInt(state[1], 10),
+                    pageNumber: parseInt(state[3], 10)
+                }
+            };
+        } else if (state.length == 2) {
+            // TODO: Separate album front page and single page views
+            ret = {
+                view: "albumPhotos",
+                parameter: {
+                    albumId: parseInt(state[1], 10),
+                    pageNumber: 1
+                }
+            };
+        }
+    }
+
+    loadState(ret);
+}
+
+function loadState(state) {
+    switch (state.view) {
+        case "main":
+            Kaleeri.loadFrontPage();
+            break;
+
+        case "album":
+            Kaleeri.loadAlbums();
+            break;
+
+        case "albumPhotos":
+            Kaleeri.loadAlbumPage(state.parameter.albumId, state.parameter.pageNumber);
+            break;
+
+        case "addPhoto":
+            Kaleeri.loadAddPhoto(state.parameter.albumId, state.parameter.pageNumber, state.parameter.photoNumber);
+            break;
+    }
+}
+
 Kaleeri.nextPage = function () {
-    console.log(Kaleeri.state);
-    Kaleeri.fadeOutAlbums(Kaleeri.state.parameter.albumId, parseInt(Kaleeri.state.parameter.pageNumber) + 1);
-    Kaleeri.fadeInAlbums();
+    if (Kaleeri.currentAlbum === null) { return; }
+
+    var state = location.hash.substr(1).split("/");
+    var page = parseInt(state[3] || 1);
+
+    if (page == Kaleeri.currentAlbum.pages) { return; }
+    state[3] = page + 1;
+    location.hash = "#" + state.join("/");
 };
 
 Kaleeri.previousPage = function () {
-    console.log(Kaleeri.state);
-    Kaleeri.fadeOutAlbums(Kaleeri.state.parameter.albumId, parseInt(Kaleeri.state.parameter.pageNumber) - 1);
-    Kaleeri.fadeInAlbums();
+    if (Kaleeri.currentAlbum === null) { return; }
+
+    var state = location.hash.substr(1).split("/");
+    var page = parseInt(state[3] || 1);
+
+    if (page == 1) { return; }
+    state[3] = page - 1;
+    location.hash = "#" + state.join("/");
 };
 
-Kaleeri.fadeInAlbums = function () {
-    $("#content-placeholder").fadeIn();
+Kaleeri.loadFrontPage = function () {
+    // TODO: Actual front page for logged-in users
+    Kaleeri.loadAlbums();
 };
 
 Kaleeri.loadAlbums = function () {
@@ -76,21 +117,19 @@ Kaleeri.loadAlbums = function () {
             var template = Handlebars.compile(source);
             var html = template(data);
             $("#content-placeholder").html(html);
-            state.view = "album";
-            history.pushState(state, " ", "#album/");
         })
     });
 };
 
 Kaleeri.fadeOutAlbums = function (albumId, pageNumber) {
+    Kaleeri.parseAlbumId();
     $("#content-placeholder").fadeOut(300, function () {
-        Kaleeri.loadAlbumPhotos(albumId, pageNumber);
+        Kaleeri.loadAlbumPage(albumId, pageNumber);
     });
 };
 
 Kaleeri.addPhoto = function () {
     $(document).ready(function () {
-
         var source = Kaleeri.templates.add_photo;
         var template = Handlebars.compile(source);
         var html = template();
@@ -106,38 +145,82 @@ Kaleeri.modifyPhoto = function () {
         var html = template();
         $("#content-placeholder").html(html);
     })
-}
+};
+
+Kaleeri.loadAddPhoto = function (albumId, pageNumber, photoNumber) {
+    $(document).ready(function () {
+        var template = Handlebars.compile(Kaleeri.templates.add_photo);
+        $("#content-placeholder").html(template({
+            albumId: albumId,
+            albumName: Kaleeri.currentAlbum.name,
+            pageNumber: pageNumber,
+            photoNumber: photoNumber
+        }));
+    });
+};
 
 Kaleeri.photoToAlbum = function () {
 
-}
+};
 
-Kaleeri.loadAlbumPhotos = function (albumId, pageNumber) {
+Kaleeri.loadAlbumPage = function (albumId, pageNumber) {
     $(document).ready(function () {
-        $.getJSON("album/" + albumId + "/", function (data2) {
-            var source2 = Kaleeri.templates.album_details;
-            var template2 = Handlebars.compile(source2);
-            var html2 = template2(data2);
-            $("#content-placeholder").html(html2);
+        $("#content-placeholder").empty().addClass("spinner");
 
-        })
+        $.getJSON("album/" + albumId + "/", function (data) {
+            Kaleeri.currentAlbum = data;
+            var source = Kaleeri.templates.album_details;
+            var template = Handlebars.compile(source);
+            var html = template(data);
+            $("#content-placeholder").removeClass("spinner").html(html);
+        });
+
         $.getJSON("album/" + albumId + "/page/" + pageNumber, function (data) {
             var source = Kaleeri.templates.album_view;
             var template = Handlebars.compile(source);
             var html = template(data);
-            $("#content-placeholder").append(html);
+            $("#content-placeholder").append(html).fadeIn();
 
-            Kaleeri.fadeInAlbums();
-            state.view = "albumPhotos";
-            console.log("Setting parameters " + albumId + " and " + pageNumber)
-            state.parameter = {};
-            state.parameter.albumId = String(albumId);
-            state.parameter.pageNumber = String(pageNumber);
-            Kaleeri.state = state;
-            history.pushState(state, " ", "#album/" + albumId + "/page/" + pageNumber);
+            var photo_template = Handlebars.compile(Kaleeri.templates.photo_block);
+            var photo_map = {};
 
-        })
+            var i;
+            for (i = 1; i <= data.max_photos; ++i) {
+                photo_map[i] = {
+                    "url": null,
+                    "caption": null,
+                    "num": i
+                };
+            }
 
-    })
+            for (i = 0; i < data.photos.length; ++i) {
+                photo_map[data.photos[i].num] = data.photos[i];
+            }
 
+            $album_content = $('#album_content');
+            $album_content.empty();
+            for (i = 1; i <= data.max_photos; ++i) {
+                photo_map[i].album = albumId;
+                photo_map[i].page = pageNumber;
+                $album_content.append(photo_template(photo_map[i]));
+            }
+        });
+    });
 };
+
+$(function () {
+    $(document.createElement("div")).load(
+        "/static/handlebar-templates.html",
+        function () {
+            $(this).find("script").each(function (i, e) {
+                Kaleeri.templates[e.id] = e.innerHTML;
+            });
+        }
+    );
+
+    if (location.hash) {
+        loadHash();
+    } else {
+        loadState({"view": "main"});
+    }
+});
