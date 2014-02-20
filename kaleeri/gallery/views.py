@@ -161,13 +161,7 @@ def create_album(request):
     album.save()
 
     page = AlbumPage()
-    if PageLayout.objects.count() < 1:
-        layout = PageLayout()
-        layout.name="start"
-        layout.num_photos=3
-        layout.save()
-    else:
-        layout = PageLayout.objects.get(name="start")
+    layout = PageLayout.objects.get(id=1)
     page.layout = layout
     page.album = album
     page.num = 1
