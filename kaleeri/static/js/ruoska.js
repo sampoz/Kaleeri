@@ -2,6 +2,7 @@
 (function ($) {
     'use strict';
     function ruoska(elem) {
+        console.log("ruoska() got", elem);
         var overlay, wrapper;
 
         if (!(elem instanceof HTMLImageElement)) {

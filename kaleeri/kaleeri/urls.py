@@ -9,6 +9,8 @@ urlpatterns = patterns(
     url(r'^admin/', include(admin.site.urls)),
     url(r'^accounts/', include('allaccess.urls')),
     url(r'^login/$', 'django.contrib.auth.views.login', name="Kaleeri Login"),
+    url(r'^register/$', 'gallery.views.register', name="Kaleeri Register"),
+    url(r'^login/$', 'django.contrib.auth.views.login', name="Kaleeri Login"),
     url(r'^logout/$', 'django.contrib.auth.views.logout', {"next_page": "/"}, name="Kaleeri Logout"),
     url(r'^register/$', 'gallery.views.register', name="Kaleeri Register"),
     url(r'^profile/$', 'gallery.views.user_account', name="Kaleeri Profile"),

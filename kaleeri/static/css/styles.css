@@ -114,3 +114,7 @@ body {
 #share_bar {
     margin-left: .25em;
 }
+
+#flickr_output img + img {
+    margin-left: .5em;
+}
