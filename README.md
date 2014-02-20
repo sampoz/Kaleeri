@@ -10,8 +10,8 @@ Osmo Maksimainen 84706E
 
 * Authentication - 200p
 * Basic album functionalities - 400p
-* Public link to photo albums - ????
-* Order albums - ?????
+* Public link to photo albums - 50p
+* Order albums - ???
 * Integrate with an image service API (Flickr) - 80p
 * 3rd party login - 80p
 * Use of Ajax - 100p
@@ -31,7 +31,6 @@ We had too big plans for this project from day 1. We tried to make whole site wo
 #### Known bugs
 
 * Some times templates are not loading
-* Browsers back-button only works for 1 step on album view
 
 #### Who did what
 Helin:
