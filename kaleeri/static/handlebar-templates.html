@@ -23,9 +23,26 @@
 </div>
 
 <div id="share_bar" class="row">
-    <div class="col-md-16">
-        <label>Share URL: <input type="text" name="share_url" id="share_url" onclick="this.select()" value=""></label>
+    <div class="col-md-12">
+        <label>Share URL: <input class="form-control" type="text" name="share_url" id="share_url" onclick="this.select()" value=""></label>
     </div>
+
+        <div class="col-md-1">
+        <a id="fb_share" href="https://www.facebook.com/sharer/sharer.php?u=" target="_blank">
+        Share on Facebook
+        </a>
+        </div>
+        <div class ="col-md-1">
+        <a id="tw_share" href="https://twitter.com/share?url=" target="_blank">
+        Tweet
+        </a>
+        </div>
+        <div class="col-md-1">
+        <a id="g_plus" href="https://plus.google.com/share?url=" target="_blank">
+        Share on Google+
+        </a>
+        </div>
+
 </div>
 
 <div id="album_content" class="{{ layout_class }}"></div>

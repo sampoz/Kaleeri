@@ -207,7 +207,11 @@ Kaleeri.loadAlbumPage = function (albumId, pageNumber, shareId) {
                 $content.append(html);
             }
 
-            $("#share_url").val(document.URL.split("#")[0] + "#album/" + albumId + "/" + data.share_id);
+            var share_url = document.URL.split("#")[0] + "#album/" + albumId + "/" + data.share_id;
+            $("#share_url").val(share_url);
+            $("#fb_share")[0].href += encodeURIComponent(share_url);
+            $("#tw_share")[0].href += encodeURIComponent(share_url);
+            $("#g_plus")[0].href += encodeURIComponent(share_url);
 
             var photo_template = Handlebars.compile(Kaleeri.templates.photo_block);
             var photo_map = {};
