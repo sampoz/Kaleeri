@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import logging
+from unicodedata import decimal
 from django.core.context_processors import csrf
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Count
