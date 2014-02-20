@@ -18,7 +18,6 @@
 <script id="album_view" type="text/x-handlebars-template">
 <div id="buttons" class="btn-group">
     <a class="btn btn-default" href="/album/create">Create a new album</a>
-    <a class="btn btn-default" id="add-button" href="/add/" >Add a new photo</a>
     <a class="btn btn-default" onclick="Kaleeri.previousPage()" ><span class="glyphicon glyphicon-chevron-left"></span> Previous Page</a>
     <a class="btn btn-default" onclick="Kaleeri.nextPage()" >Next Page <span class="glyphicon glyphicon-chevron-right"></span></a>
 </div>
@@ -52,12 +51,52 @@
 </script>
 
 <script id="add_photo" type="text/x-handlebars-template">
-<div class="add_photo">
-    <p>Adding photo to slot {{ photoNumber }} on page {{ pageNumber }} on album {{ albumName }}.</p>
-    <label for="photo_url">Photo URL:</label>
-    <input id="photo_url" type="text" placeholder="Url address">
-    <button class="btn btn-default" onclick="Kaleeri.submitAddPhoto()">Modify photo</button>
-</div>
+   <div id="album-form">
+        <h1>Add a photo</h1>
+        <div id="update"></div>
+        <form action="" method="post">
+
+            <label>
+                Flickr search:
+                <input name="search" id="search" type="text" placeholder="eg. cats">
+            </label>
+
+            <input class="btn btn-default" type="button" onclick="getDataFromRuoska()" value="use this photo">
+
+            <label>
+                Photo URL:
+                <input name="url" id="url" type="url" placeholder="http://">
+            </label>
+
+            <label>
+                Crop X:
+                <input name="crop_x" id="crop_x" type="number" placeholder="1">
+            </label>
+
+            <label>
+                Crop Y:
+                <input name="crop_y" id="crop_y" type="number" placeholder="1">
+            </label>
+
+            <label>
+                Crop width:
+                <input name="crop_w" id="crop_w" type="number" placeholder="1">
+            </label>
+
+            <label>
+                Crop height:
+                <input name="crop_h" id="crop_h" type="number" placeholder="1">
+            </label>
+
+            <label>
+                Page number:
+                <input name="page" id="page" type="number" placeholder="1" value="1">
+            </label>
+
+            <div id="update"></div>
+            <input class="btn btn-default" type="submit" value="add a photo">
+        </form>
+    </div>
 </script>
 
 <script id="modify_photo" type="text/x-handlebars-template">
