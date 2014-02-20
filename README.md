@@ -1,3 +1,55 @@
+####Students:
+Anssi Matti Helin <student_id>
+
+Sampsa Laapotti 293545
+
+Osmo Maksimainen 84706E
+
+####Features
+
+* Authentication - 200p             
+* Basic album functionalities - 400p
+* Public link to photo albums - ????
+* Order albums - ?????
+* Integrate with an image service API (Flickr) - 80p
+* 3rd party login - 80p
+* Use of Ajax - 100p
+* EXTRA: ruoska.js - 100p
+
+
+We had too big plans for this project from day 1. We tried to make whole site work as a single page app, but it just took a lot of time from normal development so we had to just scrap the idea. Because of this, we had to hurry some parts of the development and there is still a few known bugs. One of those is that templates are not loaded when the page is loaded. One of the best things is our photocropping js-library (ruoska.js credits to Helin for making this). It is just great way to crop photos and it is easy to use, just drag the box over the photo! Coding the basic functionalities was one of the difficultiest one, because there was not enough time to do them just the way we would have wanted to. 
+
+####Technologies
+
+* Django
+* HTML5
+* CSS3
+* handlebars.js (for templates)
+* ruoska.js (self-made photocropping tool)
+
+####Known bugs
+
+* Some times templates are not loading
+* Browsers back-button only works for 1 step on album view
+
+####Who did what
+Helin:
+backend, fronted, ruoska.js
+
+Laapotti:
+backend, frontend
+
+Maksimainen:
+frontend, ux
+
+
+####Instructions
+
+run foo bar
+
+=============
+=============
+
 group-36-2013
 =============
 
@@ -27,11 +79,14 @@ Public links should not allow editing of albums
 
 * Share albums (max 80 points)
 Allow users to easily post a public link to a photo album to Twitter, Google+, or other similar services.
-Order albums (mandatory, 50-200 points)
+
+* Order albums (mandatory, 50-200 points)
 Allow users to create orders from albums and to use our internal payment service to pay orders before accepting them. See http://payments.webcourse.niksula.hut.fi/ to find more about the payments service. Optionally order handling etc.
-Integrate with an image service API (max 100 points)
+
+* Integrate with an image service API (max 100 points)
 Use the Flickr API or some other image service API to allow users to search images when adding images to pages.
-3rd party login (max 100 points)
+
+* 3rd party login (max 100 points)
 Allow OpenID, Gmail or Facebook login to your system. Hint: Think what information you get from third party login services and if some extra information is also needed. This is the only feature where you are supposed to use third party Django apps in your service.
 
 * Use of Ajax (max 100 points)

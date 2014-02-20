@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block title %}Add a photo{% endblock %}
+
+{% block extrajs %}
+    <script src="{% static "js/ruoska.js" %}"></script>
+    <script>
+    function addUrl(url) {
+        $('#url').val(url);
+    }
+
+    function getDataFromRuoska() {
+        var image = $('#update').find('img')[0];
+        "xywh".split("").forEach(function (dir) {
+            $('#crop_' + dir).val(image["crop_" + dir]);
+        });
+    }
+
+    var urlStart = "http://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=acdcbe64b4866c6697d07831ecf14842&tags=";
+    var urlEnd = "&safe_search=1&per_page=20&format=json&jsoncallback=?";
+
+    $(document).ready(function () {
+        $('#search').keyup(function () {
+            var searchField = $('#search').val();
+            $.getJSON(urlStart + searchField + urlEnd, function (data) {
+                var output = "";
+                $.each(data, function (key, val) {
+                    var images = data;
+                    var url = "http://farm" + data.photos.photo[0].farm + ".staticflickr.com/" + data.photos.photo[0].server + "/" + data.photos.photo[0].id + "_" + data.photos.photo[0].secret + "_s.jpg";
+                    output = "<img height='75' width='75' src='" + url + "'>";
+                });
+                $('#update').append(output);
+                $('img').click(function () {
+                    var ruoskaThis = $(this).attr('src');
+                    addUrl(ruoskaThis);
+                    var $update = $('#update');
+                    $update.empty();
+                    var singleImage=  "<img height='650' width='650' src='" + ruoskaThis.replace("_s.jpg","_z.jpg")+"' >";
+                    $update.append(singleImage);
+                    $update.find('img').ruoska();
+                });
+            });
+        });
+    });
+    </script>
+{% endblock %}
+
+{% block extracss %}
+    <link rel="stylesheet" href="{% static "css/ruoska.css" %}">
+{% endblock %}
+
+{% block content %}
+    <div id="album-form">
+        <h1>Add a photo</h1>
+        <div id="update"></div>
+        <form action="{% url 'gallery.views.add_photo' %}" method="post">
+            {% csrf_token %}
+            <label>
+                Flickr search:
+                <input name="search" id="search" type="text" placeholder="eg. cats">
+            </label>
+
+            <input class="btn btn-default" type="button" onclick="getDataFromRuoska()" value="use this photo">
+
+            <label>
+                Photo URL:
+                <input name="url" id="url" type="url" placeholder="http://">
+            </label>
+
+            <label>
+                Crop X:
+                <input name="crop_x" id="crop_x" type="number" placeholder="1">
+            </label>
+
+            <label>
+                Crop Y:
+                <input name="crop_y" id="crop_y" type="number" placeholder="1">
+            </label>
+
+            <label>
+                Crop width:
+                <input name="crop_w" id="crop_w" type="number" placeholder="1">
+            </label>
+
+            <label>
+                Crop height:
+                <input name="crop_h" id="crop_h" type="number" placeholder="1">
+            </label>
+
+            <label>
+                Page number:
+                <input name="page" id="page" type="number" placeholder="1" value="1">
+            </label>
+
+            <div id="update"></div>
+            <input class="btn btn-default" type="submit" value="add a photo">
+            {% if errors|length >= 1 %}
+                <p> {{ errors }} </p>
+            {% endif %}
+        </form>
+    </div>
+
+{% endblock content %}

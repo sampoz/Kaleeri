@@ -1,16 +1,21 @@
 #!/usr/bin/env python
 
 import logging
+from django.core.context_processors import csrf
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Count
 from django.http import HttpResponseRedirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render_to_response, render
+from django.shortcuts import render_to_response, render, redirect
 from django.template import RequestContext
-from gallery.forms import AlbumForm
+from django.core.urlresolvers import reverse
+from .forms import AlbumForm
+from .forms import PhotoForm
 from .models import Album
 from .utils import render_to_json
+from models import AlbumPage
+from models import PageLayout
 
 
 logger = logging.getLogger(__name__)
@@ -126,28 +131,75 @@ def show_page(request, album_id, page_num, share_id=None):
             {
                 "url": photo.url,
                 "caption": photo.caption,
+                "num": photo.num,
                 "crop": [photo.crop_x, photo.crop_y, photo.crop_w, photo.crop_h]
             } for photo in result_page.photo_set.all()
-        ]
+        ],
+        "max_photos": result_page.layout.num_photos,
+        "layout_class": result_page.layout.css_class
     }
 
 
-@render_to_json()
 def create_album(request):
+    logger.info("new album create started")
     if not request.user.is_authenticated():
         logger.info("Anonymous user tried to create an album")
         return {"error": "Forbidden"}
 
+    if request.method == 'GET':
+        return render_to_response("album/create.html", RequestContext(request))
+
     form = AlbumForm(request.POST)
     if not form.is_valid():
+        logger.info("validation errors were " + str(form.errors))
         logger.info("User %s tried to create album with invalid data", request.user.get_username())
-        return {"error": "Invalid request"}
+        return render_to_response('index.html', {'user': request.user})
 
     logger.info("Creating album '%s' for user %s", request.POST["name"], request.user.get_username())
     album = form.save(commit=False)
     album.owner = request.user
     album.save()
-    return {"id": album.id}
+
+    page = AlbumPage()
+    if PageLayout.objects.count() < 1:
+        layout = PageLayout()
+        layout.name="start"
+        layout.num_photos=3
+        layout.save()
+    else:
+        layout = PageLayout.objects.get(name="start")
+    page.layout = layout
+    page.album = album
+    page.num = 1
+    page.save()
+    url = request.build_absolute_uri(reverse("home"))
+    return redirect(url)
+
+
+def add_photo(request):
+    logger.info(request.path)
+    album_number = 0
+    if not request.user.is_authenticated():
+        logger.info("Anonymous user tried to add photo")
+        return {"error": "Forbidden"}
+
+    if request.method == 'GET':
+        album_number = request.get("album")
+        return render_to_response("add.html", {}, context_instance=RequestContext(request))
+
+    form = PhotoForm(request.POST)
+
+    if not form.is_valid():
+        logger.info(str(form.errors))
+        return render_to_response("add.html", {'user': request.user, 'errors' : str(form.errors)}, context_instance=RequestContext(request))
+
+    photo = form.save(commit=False)
+    photo.url = request.POST["url"]
+    photo.album = Album.objects.get(pk=album_number)
+    photo.save()
+    logger.info("added new photo")
+    url = request.build_absolute_uri(reverse("home"))
+    return redirect(url)
 
 
 @login_required

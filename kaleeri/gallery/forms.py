@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from gallery.models import Album, AlbumPage, Photo
+from models import Album, AlbumPage, Photo
 
 
 class AlbumForm(ModelForm):

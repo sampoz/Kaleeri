@@ -17,4 +17,5 @@ urlpatterns = patterns(
     url(r'^album/(\d+)/subalbums/([a-f0-9]{40})?$', 'gallery.views.list_albums'),
     url(r'^album/list/$', 'gallery.views.list_albums'),
     url(r'^album/create/$', 'gallery.views.create_album'),
+    url(r'^add/$', 'gallery.views.add_photo'),
 )

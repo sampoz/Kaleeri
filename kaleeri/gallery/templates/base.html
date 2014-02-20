@@ -1,59 +1,59 @@
 {% load staticfiles %}
-
 <!doctype html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title>Kaleeri</title>
-        <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
-        <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-        <script src="https://code.jquery.com/jquery.js"></script>
-        <script src="{% static 'js/bootstrap.js' %}"></script>
-        <script src="{% static 'js/handlebars-v1.3.0.js' %}"></script>
-        <script src="{% static 'js/navigate.js' %}"></script>
-    </head>
+<head>
+    <meta charset="utf-8">
+    <title>Kaleeri</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    {% block extracss %}{% endblock %}
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <script src="{% static 'js/bootstrap.js' %}"></script>
+    <script src="{% static 'js/handlebars-v1.3.0.js' %}"></script>
+    <script src="{% static 'js/navigate.js' %}"></script>
+    {% block extrajs %}{% endblock %}
+</head>
 
-    <body>
-        <header>
-            <nav role="navigation" class="navbar navbar-default">
-                <div>
-                    <div id="topic">
-                        <a class="h1" href="/">Kaleeri &ndash; Enslave your images!</a>
-                    </div>
-                    {% if not user.is_authenticated %}
-                    <ul class="navbar-nav navbar list-inline" id="links">
-                        <li>
-                            <a class="navigation-item btn" href="{% url 'allaccess-login' 'facebook' %}">Fabo login</a>
-                        </li>
-                        <li>
-                            <a class="navigation-item btn" href="{% url 'django.contrib.auth.views.login' %}">Log in</a>
-                        </li>
-                        <li>
-                            <a class="navigation-item btn" href="{% url 'gallery.views.register' %}">Register</a>
-                        </li>
-                    </ul>
-                    {% else %}
-                    <ul class="navbar-nav navbar list-inline" id="links">
-                        <li>
-                            <a class="navigation-item btn" href="{% url 'gallery.views.user_account' %}">My Profile</a>
-                        </li>
-                        <li>
-                            <a class="navigation-item btn" href="{% url 'django.contrib.auth.views.logout' %}">Log out</a>
-                        </li>
-                    </ul>
-                    {% endif %}
-                </div>
-            </nav>
-        </header>
-
-        <section>{% block content %}{% endblock %}</section>
-
-        <footer class="navbar-fixed-bottom">
-            <div id="footer-text">
-            Kaleeri &copy; Taistelu-Jaska Productions ltd.
+<body>
+<header>
+    <nav role="navigation" class="navbar navbar-default">
+        <div>
+            <div id="topic">
+                <a class="h1" href="/">Kaleeri &ndash; Enslave your images!</a>
             </div>
-        </footer>
+            {% if not user.is_authenticated %}
+                <ul class="navbar-nav navbar list-inline" id="links">
+                    <li>
+                        <a class="navigation-item btn" href="{% url 'allaccess-login' 'facebook' %}">Facebook login</a>
+                    </li>
+                    <li>
+                        <a class="navigation-item btn" href="{% url 'django.contrib.auth.views.login' %}">Log in</a>
+                    </li>
+                    <li>
+                        <a class="navigation-item btn" href="{% url 'gallery.views.register' %}">Register</a>
+                    </li>
+                </ul>
+            {% else %}
+                <ul class="navbar-nav navbar list-inline" id="links">
+                    <li>
+                        <a class="navigation-item btn" href="{% url 'gallery.views.user_account' %}">My Profile</a>
+                    </li>
+                    <li>
+                        <a class="navigation-item btn" href="{% url 'django.contrib.auth.views.logout' %}">Log out</a>
+                    </li>
+                </ul>
+            {% endif %}
+        </div>
+    </nav>
+</header>
 
+<section>{% block content %}{% endblock %}</section>
 
-    </body>
+<footer class="navbar-fixed-bottom">
+    <div id="footer-text">
+        Kaleeri &copy; Taistelu-Jaska Productions ltd.
+    </div>
+</footer>
+
+</body>
 </html>
