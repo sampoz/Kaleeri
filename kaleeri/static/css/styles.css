@@ -30,14 +30,6 @@ section h2 {
     float: right;
 }
 
-#base-text > p {
-    width: 80%;
-}
-
-#base-text {
-    padding-left: 2em;
-}
-
 body {
     padding-bottom: 30px;
     background: url('/static/img/bg.png') top left repeat;
@@ -48,7 +40,7 @@ body {
     margin: 0 auto;
 }
 
-#base-logged-in {
+#base {
     margin: 0 auto;
     max-width: 80%;
 }
@@ -116,5 +108,6 @@ body {
 }
 
 .spinner {
-    background: url('/static/img/ajax-loader.gif') center center no-repeat;
+    background: url('/static/img/ajax-loader.gif') top left no-repeat;
+    background-size: cover;
 }

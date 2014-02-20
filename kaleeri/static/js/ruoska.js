@@ -195,8 +195,7 @@
 
     $.fn.ruoska = function () {
         return this.each(
-            function (i, e) {
-                i = i || 0; // JSLint...
+            function (_i, e) {
                 ruoska(e);
             }
         );

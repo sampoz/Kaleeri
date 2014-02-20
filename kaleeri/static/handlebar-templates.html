@@ -55,38 +55,20 @@
         <h1>Add a photo</h1>
         <div id="update"></div>
         <form action="" method="post">
-
             <label>
                 Flickr search:
                 <input name="search" id="search" type="text" placeholder="eg. cats">
             </label>
-
-            <input class="btn btn-default" type="button" onclick="getDataFromRuoska()" value="use this photo">
 
             <label>
                 Photo URL:
                 <input name="url" id="url" type="url" placeholder="http://">
             </label>
 
-            <label>
-                Crop X:
-                <input name="crop_x" id="crop_x" type="number" placeholder="1">
-            </label>
-
-            <label>
-                Crop Y:
-                <input name="crop_y" id="crop_y" type="number" placeholder="1">
-            </label>
-
-            <label>
-                Crop width:
-                <input name="crop_w" id="crop_w" type="number" placeholder="1">
-            </label>
-
-            <label>
-                Crop height:
-                <input name="crop_h" id="crop_h" type="number" placeholder="1">
-            </label>
+            <input name="crop_x" id="crop_x" type="hidden" placeholder="1">
+            <input name="crop_y" id="crop_y" type="hidden" placeholder="1">
+            <input name="crop_w" id="crop_w" type="hidden" placeholder="1">
+            <input name="crop_h" id="crop_h" type="hidden" placeholder="1">
 
             <label>
                 Page number:
