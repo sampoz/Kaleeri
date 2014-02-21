@@ -225,12 +225,20 @@ Kaleeri.loadAlbumPage = function (albumId, pageNumber, shareId) {
                     "url": null,
                     "caption": null,
                     "num": i,
+                    "crop_x": 0,
+                    "crop_y": 0,
+                    "crop_w": 0,
+                    "crop_h": 0,
                     "logged_in": ($(".logged-in").length > 0)
                 };
             }
 
             for (i = 0; i < data.photos.length; ++i) {
-                photo_map[data.photos[i].num] = data.photos[i];
+                var ref = photo_map[data.photos[i].num] = data.photos[i];
+                ref.crop_x = ref.crop[0];
+                ref.crop_y = ref.crop[1];
+                ref.crop_w = ref.crop[2];
+                ref.crop_h = ref.crop[3];
             }
 
 

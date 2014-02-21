@@ -50,16 +50,14 @@
 
 <script id="photo_block" type="text/x-handlebars-template">
     <div class="photo-container" id="photo-{{ num }}">
-        <div class="img-container{{#unless url}} missing{{/unless}}" onclick="">
-            {{#if url}}
-                <img src="{{ url }}">
-            {{else}}
+        <div class="img-container{{#unless url}} missing{{/unless}}"{{#if url}} style="background-image:url('{{url}}');background-position:-{{crop_x}}px -{{crop_y}}px;max-width:{{crop_w}}px;max-height:{{crop_h}}px"{{/if}}>
+            {{#unless url}}
                 {{#if logged_in}}
                 <a href="#album/{{ album }}/page/{{ page }}/photo/{{ num }}/add">No photo yet &#9785;</a>
                 {{else}}
                 No photo yet &#9785;
                 {{/if}}
-            {{/if}}
+            {{/unless}}
         </div>
         <div class="caption-container">
             <p>{{#if caption}}{{ caption }}{{ else }}No caption{{/if}}</p>

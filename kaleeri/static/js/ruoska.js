@@ -22,8 +22,8 @@
         // most probably used to the crop border being included in the crop area.
         overlay = $(document.createElement("div")).addClass("ruoska-overlay");
         overlay.css({
-            left: elem.crop_x + 1,
-            top: elem.crop_y + 1,
+            left: elem.crop_x + 1 + "px",
+            top: elem.crop_y + 1 + "px",
             width: elem.crop_w - 2 + "px",
             height: elem.crop_h - 2 + "px"
         });
@@ -117,12 +117,12 @@
                         this.crop_y = new_h + 2;
                     } else {
                         // Moving the whole overlay
-                        // Clamp the overlay to [0, img.width - overlay.width - 2] and similarly for height,
+                        // Clamp the overlay to [1, img.width - overlay.width - 2] and similarly for height,
                         // -2 comes from the borders as we want the borders to be included
                         new_x = overlay.old_x + e.pageX - overlay.origin_x;
-                        new_x = Math.min(Math.max(0, new_x), this.width - overlay.width() - 2);
+                        new_x = Math.min(Math.max(1, new_x), this.width - overlay.width() - 2);
                         new_y = overlay.old_y + e.pageY - overlay.origin_y;
-                        new_y = Math.min(Math.max(0, new_y), this.height - overlay.height() - 2);
+                        new_y = Math.min(Math.max(1, new_y), this.height - overlay.height() - 2);
                         $(overlay).css('left', new_x + 'px')
                                   .css('top', new_y + 'px');
 

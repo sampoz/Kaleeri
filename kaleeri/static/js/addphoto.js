@@ -18,11 +18,16 @@ function getCookie(name) {
     return cookieValue;
 }
 
+function pxToInt(val) {
+    return parseInt(val.substr(0, val.length - 2), 10);
+}
+
 function getDataFromRuoska() {
-    var image = $('#crop_image')[0];
-    "xywh".split("").forEach(function (dir) {
-        $('#crop_' + dir).val(image["crop_" + dir]);
-    });
+    var $overlay = $('.ruoska-overlay');
+    $('#crop_x').val(pxToInt($overlay.css('left')));
+    $('#crop_y').val(pxToInt($overlay.css('top')));
+    $('#crop_w').val(pxToInt($overlay.css('width')));
+    $('#crop_h').val(pxToInt($overlay.css('height')));
 }
 
 function loadFlickr(query, page) {

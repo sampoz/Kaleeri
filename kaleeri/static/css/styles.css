@@ -82,9 +82,21 @@ body {
 }
 
 .layout-fourpage .photo-container {
-    width: 45%;
+    width: 250px;
+    max-height: 250px;
     float: left;
-    margin-top: 1em;
+    margin-left: 1em;
+    margin-top: 2em;
+}
+
+.layout-fourpage .img-container {
+    background-repeat: no-repeat;
+    margin: auto 0;
+}
+
+
+.layout-fourpage .photo-container:nth-child(3) {
+    clear: left;
 }
 
 .missing {
