@@ -2,6 +2,22 @@ var searchTimer = null;
 var currentSearch = "";
 var currentPage = 1;
 
+// From the Django documentation: https://docs.djangoproject.com/en/dev/ref/contrib/csrf/#ajax
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
 function getDataFromRuoska() {
     var image = $('#crop_image')[0];
     "xywh".split("").forEach(function (dir) {
@@ -39,8 +55,9 @@ function loadFlickr(query, page) {
 
 function flickr() {
     $('#flickr_output').hide().on('click', 'img', function () {
-        $('#url').val($(this).attr('src'));
-        var img = "<img id='crop_image' src='" + $(this).attr('src').replace("_s.jpg","_z.jpg") + "'>";
+        var src = $(this).attr('src').replace("_s.jpg","_z.jpg");
+        $('#url').val(src);
+        var img = "<img id='crop_image' src='" + src + "'>";
         $("#crop_container").append(img).show();
         $("#flickr_output").hide();
         $('#crop_image').load(function () { $('#crop_image').ruoska(); });
@@ -60,6 +77,9 @@ function flickr() {
     $('#flickr_next').click(function () {
         loadFlickr(currentSearch, currentPage + 1);
     });
+
+    $('#album-form').find('form')
+                    .append('<input type="hidden" name="csrfmiddlewaretoken" value="' + getCookie('csrftoken') + '">');
 
     $('#search').keyup(function () {
         clearTimeout(searchTimer);

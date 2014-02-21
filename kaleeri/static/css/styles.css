@@ -159,6 +159,12 @@ body {
 
 #album-form .btn {
     clear: both;
+    margin-top: 1em;
+}
+
+#album-form label {
+    display: block;
+    clear: left;
 }
 
 .cleaner {

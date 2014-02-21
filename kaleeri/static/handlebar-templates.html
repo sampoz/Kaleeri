@@ -81,17 +81,24 @@
    <div id="album-form" class="col-md-16">
         <h1>Add a photo</h1>
         <div id="update"></div>
-        <form action="/album/{{albumId}}/page/{{pageNumber}}/photo/{{photoNumber}}/add" method="post">
+        <form action="/album/{{albumId}}/page/{{pageNumber}}/photo/{{photoNumber}}/add/" method="post">
             <label>
                 Flickr search:
                 <input name="search" id="search" type="text" placeholder="eg. cats">
             </label>
 
-            <br>or<br>
+            or
 
             <label>
                 Photo URL:
                 <input name="url" id="url" type="url" placeholder="http://">
+            </label>
+
+            <br>
+
+            <label>
+                Caption:
+                <input name="caption" id="caption" type="text" placeholder="Caption">
             </label>
 
             <input name="crop_x" id="crop_x" type="hidden">

@@ -17,4 +17,4 @@ class AlbumPageForm(ModelForm):
 class PhotoForm(ModelForm):
     class Meta:
         model = Photo
-        fields = ['page', 'url', 'num', 'caption', 'crop_x', 'crop_y', 'crop_w', 'crop_h']
+        fields = ['url', 'caption', 'crop_x', 'crop_y', 'crop_w', 'crop_h']
