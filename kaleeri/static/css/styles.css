@@ -35,7 +35,7 @@ body {
     background: url('/static/img/bg.png') top left repeat;
 }
 
-#login-form, #album-form {
+#login-form {
     max-width: 300px;
     margin: 0 auto;
 }
@@ -115,6 +115,53 @@ body {
     margin-left: .25em;
 }
 
-#flickr_output img + img {
+#flickr_output, #crop_container {
+    display: block;
+    clear: both;
+    border: 1px solid #ffdead;
+    padding: .5em;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    border-radius: 8px;
+}
+
+#flickr_output i {
+    height: 100%;
+    text-align: center;
+    font-size: 2em;
+}
+
+#flickr_output .loading {
+    width: 160px;
+    height: 120px;
+    background: transparent url('/static/img/ajax-loader.gif') center center no-repeat;
+}
+
+#flickr_output div {
+    display: block;
+    float: left;
     margin-left: .5em;
+    margin-top: .5em;
+}
+
+#flickr_output div.arrow {
+    display: table-cell;
+    padding-top: 45px;
+    float: left;
+    vertical-align: middle;
+    text-align: center;
+}
+
+#flickr_output div.arrow:hover {
+    color: white;
+    text-shadow: #ffdead 0 0 1em;
+}
+
+#album-form .btn {
+    clear: both;
+}
+
+.cleaner {
+    display: block;
+    clear: both;
 }

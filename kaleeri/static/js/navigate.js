@@ -66,7 +66,6 @@ function loadHash() {
 }
 
 function loadState(state) {
-    console.log("loading state", state);
     switch (state.view) {
         case "main":
             Kaleeri.loadFrontPage();
@@ -134,16 +133,6 @@ Kaleeri.fadeOutAlbums = function (albumId, pageNumber) {
 Kaleeri.addPhoto = function () {
     $(document).ready(function () {
         var source = Kaleeri.templates.add_photo;
-        var template = Handlebars.compile(source);
-        var html = template();
-        $("#content-placeholder").html(html);
-    })
-};
-
-Kaleeri.modifyPhoto = function () {
-    $(document).ready(function () {
-        $.post($("add.html", "#url").serialize());
-        var source = Kaleeri.templates.modify_photo;
         var template = Handlebars.compile(source);
         var html = template();
         $("#content-placeholder").html(html);

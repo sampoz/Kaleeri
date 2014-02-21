@@ -78,32 +78,45 @@
 </script>
 
 <script id="add_photo" type="text/x-handlebars-template">
-   <div id="album-form">
+   <div id="album-form" class="col-md-16">
         <h1>Add a photo</h1>
         <div id="update"></div>
-        <form action="" method="post">
+        <form action="/album/{{albumId}}/page/{{pageNumber}}/photo/{{photoNumber}}/add" method="post">
             <label>
                 Flickr search:
                 <input name="search" id="search" type="text" placeholder="eg. cats">
             </label>
+
+            <br>or<br>
 
             <label>
                 Photo URL:
                 <input name="url" id="url" type="url" placeholder="http://">
             </label>
 
-            <input name="crop_x" id="crop_x" type="hidden" placeholder="1">
-            <input name="crop_y" id="crop_y" type="hidden" placeholder="1">
-            <input name="crop_w" id="crop_w" type="hidden" placeholder="1">
-            <input name="crop_h" id="crop_h" type="hidden" placeholder="1">
+            <input name="crop_x" id="crop_x" type="hidden">
+            <input name="crop_y" id="crop_y" type="hidden">
+            <input name="crop_w" id="crop_w" type="hidden">
+            <input name="crop_h" id="crop_h" type="hidden">
 
-            <label>
-                Page number:
-                <input name="page" id="page" type="number" placeholder="1" value="1">
-            </label>
+            <div id="flickr_output">
+                Choose an image:<br>
+                <div id="flickr_previous" class="arrow"><i class="glyphicon glyphicon-arrow-left"></i></div>
+                <div id="flickr_images">
+                    <div id="flickr_img0"></div>
+                    <div id="flickr_img1"></div>
+                    <div id="flickr_img2"></div>
+                    <div id="flickr_img3"></div>
+                    <div id="flickr_img4"></div>
+                </div>
+                <div id="flickr_next" class="arrow"><i class="glyphicon glyphicon-arrow-right"></i></div>
+                <br class="cleaner">
+            </div>
+            <div id="crop_container">
+                Crop your photo:<br>
+            </div>
 
-            <div id="flickr_output"></div>
-            <input class="btn btn-default" type="submit" value="add a photo">
+            <input class="btn btn-default" type="submit" id="album_submit" value="Add photo">
         </form>
     </div>
 </script>
