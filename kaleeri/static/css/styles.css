@@ -86,14 +86,13 @@ body {
     max-height: 250px;
     float: left;
     margin-left: 1em;
-    margin-top: 2em;
+    margin-top: 5em;
 }
 
 .layout-fourpage .img-container {
     background-repeat: no-repeat;
     margin: auto 0;
 }
-
 
 .layout-fourpage .photo-container:nth-child(3) {
     clear: left;
@@ -123,8 +122,21 @@ body {
     display: none;
 }
 
+#album_rename_row {
+    border-radius: .25em;
+    background-color: #424242;
+    margin-left: .01em;
+    margin-bottom: 1em;
+}
+
 #share_bar {
-    margin-left: .25em;
+    margin-left: .01em;
+    background-color: #282828;
+    border-radius: .25em;
+}
+
+#share_bar strong, #share_bar a {
+    line-height: 2;
 }
 
 #flickr_output, #crop_container {
@@ -182,4 +194,14 @@ body {
 .cleaner {
     display: block;
     clear: both;
+}
+
+.error {
+    margin: .5em 0;
+    padding-left: .25em;
+    background-color: #e33;
+    color: white;
+    line-height: 2;
+    font-weight: bold;
+    border-radius: .25em;
 }

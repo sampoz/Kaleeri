@@ -4,7 +4,7 @@ import logging
 from django.core.context_processors import csrf
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Count
-from django.http import HttpResponseRedirect, HttpResponseNotFound
+from django.http import HttpResponseRedirect, HttpResponseNotFound, HttpResponseBadRequest
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.http.response import HttpResponseForbidden
@@ -14,7 +14,7 @@ from django.core.urlresolvers import reverse
 from django.views.decorators.csrf import ensure_csrf_cookie
 from .forms import AlbumForm
 from .forms import PhotoForm
-from .models import Album
+from .models import Album, Photo
 from .utils import render_to_json
 from models import AlbumPage
 from models import PageLayout
@@ -152,7 +152,7 @@ def create_album(request):
     form = AlbumForm(request.POST)
     if not form.is_valid():
         logger.info("User %s tried to create album with invalid data", request.user.get_username())
-        return render_to_response('index.html', {'user': request.user})
+        return render_to_response('album/create.html', {'form': form, 'user': request.user})
 
     logger.info("Creating album '%s' for user %s", request.POST["name"], request.user.get_username())
     album = form.save(commit=False)
@@ -167,43 +167,166 @@ def create_album(request):
     page.album = album
     page.num = 1
     page.save()
-    url = request.build_absolute_uri(reverse("home"))
+    url = request.build_absolute_uri(reverse("home")) + "#album/%d/" % album.pk
     return redirect(url)
 
 
-@login_required
-def add_photo(request, album_id, page_num, photo_num):
-    user = request.user.get_username()
+@render_to_json()
+def edit_album(request, album_id):
+    if not request.user.is_authenticated():
+        return {"error": "Forbidden"}
 
+    user = request.user.get_username()
     try:
         album = Album.objects.get(pk=album_id)
     except ObjectDoesNotExist:
-        logger.info("User %s tried to add a photo to the nonexistent album ID %d", user, album_id)
-        return HttpResponseNotFound()
+        logger.info("User %s tried to edit invalid album ID %d", user, int(album_id))
+        return {"error": "Invalid album"}
+
+    if not album.has_user_access(request.user):
+        logger.info("User %s tried to edit album '%s' belonging to another user", user, album.name)
+        return {"error": "Forbidden"}
+
+    # Name is currently the only modifiable property
+    if "name" not in request.POST or not request.POST["name"].strip():
+        logger.info("User %s tried to edit album '%s' without a new name", user, album.name)
+        return {"error": "Missing name"}
+
+    album.name = request.POST["name"]
+    album.save()
+    logger.info("User %s renamed album ID %d to '%s'", user, album.pk, album.name)
+    url = request.build_absolute_uri(reverse("home")) + "#album/%d/" % album.pk
+    return {"redirect": url}
+
+
+@render_to_json()
+def edit_page(request, album_id, page_num):
+    if not request.user.is_authenticated():
+        return {"error": "Forbidden"}
+
+    user = request.user.get_username()
+    try:
+        album = Album.objects.get(pk=album_id)
+    except ObjectDoesNotExist:
+        logger.info("User %s tried to edit page %d in a nonexistent album ID %d", user, int(page_num), int(album_id))
+        return {"error": "Invalid album"}
+
+    if not album.has_user_access(request.user):
+        logger.info("User %s tried to edit page %d in album '%s' belonging to another user",
+                    user, int(page_num), album.name)
+        return {"error": "Forbidden"}
+
+    try:
+        page = AlbumPage.objects.get(pk=page_num)
+    except ObjectDoesNotExist:
+        logger.info("User %s tried to edit nonexistent page %d in the album '%s'", user, int(page_num), album.name)
+        return {"error": "Invalid page"}
+
+    # Layout is the only modifiable property - check if the new layout has less photos than the page currently has
+    if "layout" not in request.POST:
+        logger.info("User %s tried to edit page %d in album '%s' without a new layout", user, int(page_num), album.name)
+        return {"error": "Missing layout"}
+
+    try:
+        layout = PageLayout.objects.get(pk=request.POST["layout"])
+    except ObjectDoesNotExist:
+        logger.info("User %s tried to change page %d in album '%s' to an invalid layout",
+                    user, int(page_num), album.name)
+        return {"error": "Invalid layout"}
+
+    photo_count = page.photo_set.count()
+    if photo_count > layout.num_photos:
+        logger.info("User %s tried to change page %d in album '%s' to a too small layout",
+                    user, int(page_num), album.name)
+        return {"error": "New layout cannot contain all current photos"}
+
+    page.layout = layout
+    page.save()
+
+    url = request.build_absolute_uri(reverse("home")) + "#album/%d/page/%d/" % (album.pk, page.num)
+    return {"redirect": url}
+
+
+@render_to_json()
+def add_photo(request, album_id, page_num, photo_num):
+    if not request.user.is_authenticated():
+        return {"error": "Forbidden"}
+
+    user = request.user.get_username()
+    try:
+        album = Album.objects.get(pk=album_id)
+    except ObjectDoesNotExist:
+        logger.info("User %s tried to add a photo to the nonexistent album ID %d", user, int(album_id))
+        return {"error": "Invalid album"}
 
     if not album.has_user_access(request.user):
         logger.info("User %s tried to add a photo to the album '%s' owned by another user", user, album.name)
-        return HttpResponseForbidden()
+        return {"error": "Forbidden"}
+
+    layout = AlbumPage.objects.get(album=album, num=page_num).layout
+    photo_num = int(photo_num)
+    if photo_num < 1 or photo_num >= layout.num_photos:
+        logger.info("User %s tried to add out-of-bounds photo to slot %d on page %d in album '%s'",
+                    user, int(photo_num), int(page_num), album.name)
+        return {"error": "Photo number out of bounds"}
+
+    if Photo.objects.filter(num=photo_num, page__num=page_num, page__album__pk=album_id).count() > 0:
+        logger.info("User %s tried to replace photo in slot %d on page %d in album '%s'",
+                    user, int(photo_num), int(page_num), album.name)
+        return {"error": "Already exists"}
 
     form = PhotoForm(request.POST)
     if not form.is_valid():
         logger.info("User %s tried to add a photo with invalid data", request.user.get_username())
-        return render_to_response("add.html",
-                                  {'user': request.user, 'errors': str(form.errors)},
-                                  context_instance=RequestContext(request))
+        return {"error": "Invalid data"}
 
     photo = form.save(commit=False)
     photo.url = request.POST["url"]
     page = AlbumPage.objects.get(album=album, num=page_num)
     photo.album = album
     photo.page = page
-    photo.num = photo_num
+    photo.num = int(photo_num)
     photo.save()
     logger.info("User %s added a new photo to album %s, page %d, slot %d: %s",
-                request.user.get_username(), photo.url)
+                request.user.get_username(), album.name, photo.page.num, photo.num, photo.url)
 
     url = request.build_absolute_uri(reverse('home')) + '#album/%d/page/%d/' % (int(album_id), int(page_num))
-    return redirect(url)
+    return {"redirect": url}
+
+
+@render_to_json()
+def remove_photo(request, album_id, page_num, photo_num):
+    if not request.user.is_authenticated():
+        return {"error": "Forbidden"}
+
+    user = request.user.get_username()
+    try:
+        album = Album.objects.get(pk=album_id)
+    except ObjectDoesNotExist:
+        logger.info("User %s tried to remove a photo from the nonexistent album ID %d", user, int(album_id))
+        return {"error": "Invalid album"}
+
+    if not album.has_user_access(request.user):
+        logger.info("User %s tried to remove a photo from the album '%s' owned by another user", user, album.name)
+        return {"error": "Forbidden"}
+
+    try:
+        page = AlbumPage.objects.get(album=album, num=int(page_num))
+    except ObjectDoesNotExist:
+        logger.info("User %s tried to remove a photo from the nonexistent page %d in album '%s'",
+                    user, int(page_num), album.name)
+        return {"error": "Invalid page"}
+
+    try:
+        photo = Photo.objects.get(page=page, num=int(photo_num))
+    except ObjectDoesNotExist:
+        logger.info("User %s tried to remove a photo from the nonexistent slot %d on page %d in album '%s'",
+                    user, int(photo_num), int(page_num), album.name)
+        return {"error": "Invalid photo"}
+
+    photo.delete()
+    url = request.build_absolute_uri(reverse('home')) + '#album/%d/page/%d/' % (int(album_id), int(page_num))
+    return {"redirect": url}
 
 
 @login_required

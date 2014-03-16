@@ -85,6 +85,29 @@ function loadState(state) {
     }
 }
 
+Kaleeri.submitAjaxForm = function (form) {
+    var $form = $(form);
+    console.log($form);
+    var url = $form.attr('action');
+    var vals = {};
+    $form.find("input:not([type=submit])").each(function (_, e) {
+        e = $(e);
+        vals[e.attr('name')] = e.val();
+    });
+    $.post(url, vals, function (data) {
+        if (data.hasOwnProperty("redirect")) {
+            if (data.redirect == window.location) {
+                location.reload(false);
+            } else {
+                window.location = data.redirect;
+            }
+        }
+        else if (data.hasOwnProperty("error")) {
+            $form.prepend('<div class="error">' + data.error + '</div>');
+        }
+    });
+}
+
 Kaleeri.nextPage = function () {
     if (Kaleeri.currentAlbum === null) { return; }
 
@@ -136,7 +159,7 @@ Kaleeri.addPhoto = function () {
         var template = Handlebars.compile(source);
         var html = template();
         $("#content-placeholder").html(html);
-    })
+    });
 };
 
 Kaleeri.loadAddPhoto = function (albumId, pageNumber, photoNumber) {
@@ -209,6 +232,19 @@ Kaleeri.loadAlbumPage = function (albumId, pageNumber, shareId) {
             } else {
                 $content.append(html);
             }
+
+            $content.find("#album_rename_btn").click(function () {
+                var template = Handlebars.compile(Kaleeri.templates.album_rename);
+                var html = template(Kaleeri.currentAlbum);
+                $content.find("#share_bar").before(html);
+                $row = $('#album_rename_row');
+                $form = $row.find('form');
+                $form.append('<input type="hidden" name="csrfmiddlewaretoken" value="' + getCookie('csrftoken') + '">');
+                $row.find('input[type=submit]').click(function (e) {
+                    Kaleeri.submitAjaxForm($form);
+                    e.preventDefault();
+                });
+            });
 
             var share_url = document.URL.split("#")[0] + "#album/" + albumId + "/" + data.share_id;
             $("#share_url").val(share_url);

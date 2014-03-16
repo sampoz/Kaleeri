@@ -9,6 +9,15 @@
         }
     },
     {
+        "pk": 2,
+        "model": "gallery.pagelayout",
+        "fields": {
+            "css_class": "layout_two",
+            "num_photos": 3,
+            "name": "Smaller layout"
+        }
+    },
+    {
         "pk": 1,
         "model": "gallery.albumpage",
         "fields": {
@@ -276,7 +285,7 @@
         "pk": 16,
         "model": "gallery.photo",
         "fields": {
-            "url": "http://example.com",
+            "url": "http://example.comasd",
             "crop_h": 0,
             "crop_x": 0,
             "caption": "",

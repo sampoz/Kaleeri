@@ -16,36 +16,51 @@
 </script>
 
 <script id="album_view" type="text/x-handlebars-template">
-<div id="buttons" class="btn-group">
-    <a class="btn btn-default" href="/album/create">Create a new album</a>
-    <a class="btn btn-default" onclick="Kaleeri.previousPage()" ><span class="glyphicon glyphicon-chevron-left"></span> Previous Page</a>
-    <a class="btn btn-default" onclick="Kaleeri.nextPage()" >Next Page <span class="glyphicon glyphicon-chevron-right"></span></a>
-</div>
-
-<div id="share_bar" class="row">
-    <div class="col-md-12">
-        <label>Share URL: <input class="form-control" type="text" name="share_url" id="share_url" onclick="this.select()" value=""></label>
+    <div id="buttons" class="btn-group">
+        <a class="btn btn-default" href="/album/create">Create a new album</a>
+        <a class="btn btn-default" id="album_rename_btn">Rename album</a>
+        <a class="btn btn-default" onclick="Kaleeri.previousPage()" ><span class="glyphicon glyphicon-chevron-left"></span> Previous Page</a>
+        <a class="btn btn-default" onclick="Kaleeri.nextPage()" >Next Page <span class="glyphicon glyphicon-chevron-right"></span></a>
     </div>
 
+    <div id="share_bar" class="row">
+        <div class="col-md-3">
+            <label>Share URL: <input type="text" name="share_url" id="share_url" onclick="this.select()" size="18" value=""></label>
+        </div>
+
+        <div class="col-md-2">
+            <strong>Share in:</strong>
+        </div>
+
         <div class="col-md-1">
-        <a id="fb_share" href="https://www.facebook.com/sharer/sharer.php?u=" target="_blank">
-        Share on Facebook
-        </a>
+            <a id="fb_share" href="https://www.facebook.com/sharer/sharer.php?u=" target="_blank">
+            Facebook
+            </a>
         </div>
         <div class ="col-md-1">
-        <a id="tw_share" href="https://twitter.com/share?url=" target="_blank">
-        Tweet
-        </a>
+            <a id="tw_share" href="https://twitter.com/share?url=" target="_blank">
+            Twitter
+            </a>
         </div>
         <div class="col-md-1">
-        <a id="g_plus" href="https://plus.google.com/share?url=" target="_blank">
-        Share on Google+
-        </a>
+            <a id="g_plus" href="https://plus.google.com/share?url=" target="_blank">
+            Google+
+            </a>
         </div>
+    </div>
 
-</div>
+    <div id="album_content" class="{{ layout_class }}"></div>
+</script>
 
-<div id="album_content" class="{{ layout_class }}"></div>
+<script id="album_rename" type="text/x-handlebars-template">
+    <div class="row" id="album_rename_row">
+        <div class="col-md-12">
+            <form action="/album/{{ id }}/edit/" method="post">
+                <label>Album name: <input type="text" name="name" value="{{ name }}"></label>
+                <input type="submit" class="btn btn-default" value="Rename">
+            </form>
+        </div>
+    </div>
 </script>
 
 <script id="photo_block" type="text/x-handlebars-template">
