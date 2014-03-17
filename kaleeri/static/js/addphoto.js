@@ -58,7 +58,7 @@ function loadFlickr(query, page) {
     });
 }
 
-function flickr() {
+function initAddPhoto() {
     $('#flickr_output').hide().on('click', 'img', function () {
         var src = $(this).attr('src').replace("_s.jpg","_z.jpg");
         $('#url').val(src);
@@ -83,11 +83,15 @@ function flickr() {
         loadFlickr(currentSearch, currentPage + 1);
     });
 
-    $('#album-form').find('form')
-                    .append('<input type="hidden" name="csrfmiddlewaretoken" value="' + getCookie('csrftoken') + '">');
-
     $('#search').keyup(function () {
         clearTimeout(searchTimer);
         searchTimer = setTimeout(function () { loadFlickr($('#search').val(), 1) }, 500);
+    });
+
+    $form = $("#album-form").find("form");
+    $form.append('<input type="hidden" name="csrfmiddlewaretoken" value="' + getCookie('csrftoken') + '">');
+    $form.find("input[type=submit]").click(function(e) {
+        Kaleeri.submitAjaxForm($form);
+        e.preventDefault();
     });
 }

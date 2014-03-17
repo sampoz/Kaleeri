@@ -27,6 +27,10 @@
             <div id="content-placeholder"></div>
         </div>
     </div>
+    <script>
+        Kaleeri = Kaleeri || {};
+        Kaleeri.currentUser = "{{ user.username|escapejs }}";
+    </script>
 
 {% endif %}
 

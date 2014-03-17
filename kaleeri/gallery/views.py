@@ -11,7 +11,7 @@ from django.http.response import HttpResponseForbidden
 from django.shortcuts import render_to_response, render, redirect
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
-from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
 from .forms import AlbumForm
 from .forms import PhotoForm
 from .models import Album, Photo
@@ -265,7 +265,7 @@ def add_photo(request, album_id, page_num, photo_num):
 
     layout = AlbumPage.objects.get(album=album, num=page_num).layout
     photo_num = int(photo_num)
-    if photo_num < 1 or photo_num >= layout.num_photos:
+    if photo_num < 1 or photo_num > layout.num_photos:
         logger.info("User %s tried to add out-of-bounds photo to slot %d on page %d in album '%s'",
                     user, int(photo_num), int(page_num), album.name)
         return {"error": "Photo number out of bounds"}
@@ -295,6 +295,7 @@ def add_photo(request, album_id, page_num, photo_num):
 
 
 @render_to_json()
+@csrf_protect
 def remove_photo(request, album_id, page_num, photo_num):
     if not request.user.is_authenticated():
         return {"error": "Forbidden"}
