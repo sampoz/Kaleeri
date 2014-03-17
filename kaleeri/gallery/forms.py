@@ -1,11 +1,13 @@
-from django.forms import ModelForm
-from models import Album, AlbumPage, Photo
+from django.forms import ModelForm, ModelChoiceField
+from models import Album, AlbumPage, Photo, PageLayout
 
 
 class AlbumForm(ModelForm):
+    layout = ModelChoiceField(queryset=PageLayout.objects.all(),
+                              help_text="The default layout for pages in this album", required=True)
     class Meta:
         model = Album
-        fields = ['parent', 'name']
+        fields = ['name', 'parent']
 
 
 class AlbumPageForm(ModelForm):

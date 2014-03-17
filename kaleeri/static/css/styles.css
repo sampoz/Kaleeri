@@ -228,3 +228,38 @@ body {
     font-weight: bold;
     border-radius: .25em;
 }
+
+#albums img {
+    max-width: 100%;
+}
+
+#albums .img-holder {
+    min-height: 12em;
+}
+
+.parent .glyphicon, .subalbums .glyphicon {
+    margin-right: .5em;
+}
+
+#album-form {
+    margin-left: 2em;
+}
+
+#album-form input, #album-form select {
+    display: block;
+    clear: both;
+    margin-bottom: .25em;
+}
+
+.errorlist, .errorlist + p {
+    background-color: #ac2925;
+    color: white;
+}
+
+.errorlist {
+    margin-bottom: 0;
+}
+
+.errorlist + p {
+    margin-top: 0;
+}

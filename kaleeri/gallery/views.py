@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import logging
+from django import forms
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 from django.db.models import Count, Max
@@ -71,7 +72,8 @@ def list_albums(request, parent=None, share_id=None):
                 "name": album.name,
                 "photos": album.get_num_photos(),
                 "share_id": album.share_id,
-                "subalbums": album.subalbums
+                "subalbums": album.subalbums,
+                "preview": Photo.objects.filter(page__album=album).first().url
             } for album in albums
         ]
     }
@@ -91,11 +93,17 @@ def show_album(request, album_id, share_id=None):
         logger.info("User %s requested album %s without access", username, album.name)
         return {"error": "Forbidden"}
 
+    children = Album.objects.filter(parent=album)
+
     return {
         "parent": {
             "id": album.parent.id,
             "name": album.parent.name
         } if album.parent else None,
+        "subalbums": [{
+            "id": child.id,
+            "name": child.name
+        } for child in children] if children else None,
         "id": album.id,
         "owner": album.owner.get_username(),
         "name": album.name,
@@ -134,6 +142,7 @@ def show_page(request, album_id, page_num, share_id=None):
                 "url": photo.url,
                 "caption": photo.caption,
                 "num": photo.num,
+                "do_crop": photo.do_crop,
                 "crop": [photo.crop_x, photo.crop_y, photo.crop_w, photo.crop_h]
             } for photo in result_page.photo_set.all()
         ],
@@ -146,12 +155,23 @@ def show_page(request, album_id, page_num, share_id=None):
 @login_required
 def create_album(request):
     if request.method == 'GET':
-        return render_to_response("album/create.html", RequestContext(request))
+        form = AlbumForm()
+        # Dynamically load the user's albums as possible choices for a parent album
+        form.base_fields['parent'] = forms.ModelChoiceField(queryset=Album.objects.filter(owner=request.user))
+        albums = [{"id": -1, "name": "No parent"}] \
+               + [{"id": a.id, "name": a.name} for a in Album.objects.filter(owner=request.user)]
+        return render_to_response("album/create.html", RequestContext(request, {'form': form, 'albums': albums}))
 
+    # No DRY here, because Form instances should be considered immutable once initialized
     form = AlbumForm(request.POST)
+    form.base_fields['parent'] = forms.ModelChoiceField(queryset=Album.objects.filter(owner=request.user),
+                                                        empty_label='(No parent)')
+
     if not form.is_valid():
+        albums = [{"id": -1, "name": "No parent"}] \
+               + [{"id": a.id, "name": a.name} for a in Album.objects.filter(owner=request.user)]
         logger.info("User %s tried to create album with invalid data", request.user.get_username())
-        return render_to_response('album/create.html', {'form': form, 'user': request.user})
+        return render_to_response('album/create.html', {'form': form, 'user': request.user, 'albums': albums})
 
     logger.info("Creating album '%s' for user %s", request.POST["name"], request.user.get_username())
     album = form.save(commit=False)
@@ -292,6 +312,7 @@ def add_photo(request, album_id, page_num, photo_num):
     photo.album = album
     photo.page = page
     photo.num = int(photo_num)
+    photo.do_crop = request.POST.get("do_crop", False)
     photo.save()
     logger.info("User %s added a new photo to album %s, page %d, slot %d: %s",
                 request.user.get_username(), album.name, photo.page.num, photo.num, photo.url)

@@ -5,11 +5,13 @@
     <div class="row">
         {{#albums}}
             <div class="col-md-3">
-                <a href="#album/{{ id }}/page/1">
-                    <img src="" alt="?">
-                    <br />
-                    {{name}}
-                </a>
+                <div class="img-holder">
+                    <a href="#album/{{id}}/page/1">
+                        <img src="{{preview}}" alt="{{name}}">
+                    </a>
+                </div>
+                <a href="#album/{{id}}/page/1">{{name}}</a>
+                {{#if subalbums}}({{subalbums}} subalbum{{plural subalbums}}){{/if}}
             </div>
         {{/albums}}
     </div>
@@ -80,7 +82,7 @@
 
 <script id="photo_block" type="text/x-handlebars-template">
     <div class="photo-container" id="photo-{{ num }}">
-        <div class="img-container{{#unless url}} missing{{/unless}}"{{#if url}} style="background-image:url('{{url}}');background-position:-{{crop_x}}px -{{crop_y}}px;max-width:{{crop_w}}px;max-height:{{crop_h}}px"{{/if}}>
+        <div class="img-container{{#unless url}} missing{{/unless}}"{{#if url}} style="background-image:url('{{url}}');{{#if do_crop}}background-position:-{{crop_x}}px -{{crop_y}}px;max-width:{{crop_w}}px;max-height:{{crop_h}}px{{else}}background-size:contain;background-position:center center;{{/if}}"{{/if}}>
             {{#if url}}
                 <div class="img-remove-overlay">
                     <a class="btn btn-default">Remove</a>
@@ -102,6 +104,18 @@
 <script id="album_details" type="text/x-handlebars-template">
     <div class="details">
         <h2>{{ name }}</h2>
+        {{#if parent}}
+        <p class="parent">
+            <i class="glyphicon glyphicon-arrow-left"></i> Parent: <a href="#album/{{parent.id}}/">{{parent.name}}</a>
+        </p>
+        {{/if}}
+        {{#if subalbums}}
+        <p class="subalbums">
+            <i class="glyphicon glyphicon-folder-open"></i> Subalbums: {{#subalbums}}
+                <a href="#album/{{id}}/">{{name}}</a>{{#unless @last}}, {{/unless}}
+            {{/subalbums}}
+        </p>
+        {{/if}}
         <p>
             Page <span class="pagenum">1</span> / {{ pages}} &ndash;
             {{ photos }} photo{{{plural photos}}} on {{ pages }} page{{{plural pages}}}
@@ -131,6 +145,11 @@
             <label>
                 Caption:
                 <input name="caption" id="caption" type="text" placeholder="Caption">
+            </label>
+
+            <label>
+                Crop the image?
+                <input type="checkbox" id="do_crop" name="do_crop">
             </label>
 
             <input name="crop_x" id="crop_x" type="hidden">
