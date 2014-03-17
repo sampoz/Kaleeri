@@ -90,12 +90,12 @@ Kaleeri.submitAjaxForm = function (form) {
     var $form = $(form);
     var url = $form.attr('action');
     var vals = {};
-    $form.find("input:not([type=submit])").each(function (_, e) {
+    $form.find("input:not([type=submit]), select").each(function (_, e) {
         e = $(e);
         vals[e.attr('name')] = e.val();
     });
 
-    var ret = Kaleeri.submitAjaxData(url, vals);
+    var ret = Kaleeri.submitAjaxData(url, vals, $form);
 };
 
 Kaleeri.submitAjaxData = function (url, data, errorHolder) {
@@ -231,6 +231,14 @@ Kaleeri.loadAlbumPage = function (albumId, pageNumber, shareId) {
                 }
 
                 $content.find("#album_rename_btn").click(function () {
+                    var $row = $content.find('#album_rename_row');
+                    if ($row.length > 0) {
+                        $row.remove();
+                        $(this).text('Rename album');
+                        return;
+                    }
+
+                    $(this).text('Cancel renaming');
                     var template = Handlebars.compile(Kaleeri.templates.album_rename);
                     var html = template(Kaleeri.currentAlbum);
                     $content.find("#share_bar").before(html);
@@ -251,6 +259,45 @@ Kaleeri.loadAlbumPage = function (albumId, pageNumber, shareId) {
                         $('.img-remove-overlay').hide();
                         $(this).text("Remove photos");
                     }
+                });
+
+                $content.find("#page_edit_btn").click(function () {
+                    var $row = $content.find("#page_edit_row");
+                    if ($row.length > 0) {
+                        $row.remove();
+                        $(this).text('Edit page');
+                        return;
+                    }
+
+                    $(this).text('Cancel editing');
+                    var template = Handlebars.compile(Kaleeri.templates.page_edit);
+                    var data = Kaleeri.currentAlbum;
+                    data.page = pageNumber;
+                    var html = template(data);
+                    $content.find("#share_bar").before(html);
+                    $row = $('#page_edit_row');
+                    $form = $row.find('form');
+                    $form.append('<input type="hidden" name="csrfmiddlewaretoken" value="' + getCookie('csrftoken') + '">');
+
+                    $.getJSON('/layouts/', function (data) {
+                        $select = $form.find('select');
+                        $select.empty();
+                        var option;
+                        for (var i = 0; i < data.length; ++i) {
+                            $option = $(document.createElement('option'));
+                            $option.val(data[i].id);
+                            $option.text(data[i].name);
+                            if (data[i].id == Kaleeri.currentAlbum.layout_id) {
+                                $option.attr('selected', true);
+                            }
+                            $select.append($option);
+                        }
+
+                        $row.find('input[type=submit]').click(function (e) {
+                            Kaleeri.submitAjaxForm($form);
+                            e.preventDefault();
+                        });
+                    });
                 });
 
                 var share_url = document.URL.split("#")[0] + "#album/" + albumId + "/" + data.share_id;

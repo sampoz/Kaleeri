@@ -1,13 +1,12 @@
 #!/usr/bin/env python
 
 import logging
-from django.core.context_processors import csrf
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Count
-from django.http import HttpResponseRedirect, HttpResponseNotFound, HttpResponseBadRequest
+from django.db import transaction
+from django.db.models import Count, Max
+from django.http import HttpResponseRedirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
-from django.http.response import HttpResponseForbidden
 from django.shortcuts import render_to_response, render, redirect
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
@@ -159,7 +158,6 @@ def create_album(request):
     album.owner = request.user
     album.save()
 
-    # TODO: Is this checked by AlbumForm?
     layout = PageLayout.objects.get(id=request.POST["layout"])
 
     page = AlbumPage()
@@ -217,7 +215,7 @@ def edit_page(request, album_id, page_num):
         return {"error": "Forbidden"}
 
     try:
-        page = AlbumPage.objects.get(pk=page_num)
+        page = AlbumPage.objects.get(album=album, num=page_num)
     except ObjectDoesNotExist:
         logger.info("User %s tried to edit nonexistent page %d in the album '%s'", user, int(page_num), album.name)
         return {"error": "Invalid page"}
@@ -239,6 +237,14 @@ def edit_page(request, album_id, page_num):
         logger.info("User %s tried to change page %d in album '%s' to a too small layout",
                     user, int(page_num), album.name)
         return {"error": "New layout cannot contain all current photos"}
+
+    # Renumber the photos to fit if necessary
+    if page.photo_set.all().aggregate(Max('num')) > layout.num_photos:
+        logger.info("Renumbering photos in page %d of album '%s'", int(page_num), album.name)
+        with transaction.atomic():
+            for i, photo in enumerate(page.photo_set.all()):
+                photo.num = i + 1
+                photo.save()
 
     page.layout = layout
     page.save()
@@ -328,6 +334,18 @@ def remove_photo(request, album_id, page_num, photo_num):
     photo.delete()
     url = request.build_absolute_uri(reverse('home')) + '#album/%d/page/%d/' % (int(album_id), int(page_num))
     return {"redirect": url}
+
+
+@render_to_json()
+def list_layouts(request):
+    # No reason for an unauthenticated user to see this
+    if not request.user.is_authenticated():
+        return {"error": "Forbidden"}
+
+    return [{
+        "name": layout.name,
+        "id": layout.id
+    } for layout in PageLayout.objects.all()]
 
 
 @login_required

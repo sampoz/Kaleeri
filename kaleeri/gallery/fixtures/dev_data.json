@@ -73,6 +73,15 @@
         }
     },
     {
+        "pk": 2,
+        "model": "gallery.pagelayout",
+        "fields": {
+            "css_class": "container-fluid layout-twopage",
+            "num_photos": 2,
+            "name": "Two per page"
+        }
+    },
+    {
         "pk": 1,
         "model": "gallery.albumpage",
         "fields": {

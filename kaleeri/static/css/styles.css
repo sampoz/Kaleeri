@@ -95,7 +95,7 @@ body {
     transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 }
 
-.layout-fourpage .photo-container {
+.layout-fourpage .photo-container, .layout-twopage .photo-container {
     width: 250px;
     max-height: 250px;
     float: left;
@@ -103,7 +103,15 @@ body {
     margin-top: 5em;
 }
 
-.layout-fourpage .img-container {
+.layout-fourpage .photo-container:nth-child(-n+2) {
+    margin-top: 2em;
+}
+
+.layout-twopage .photo-container {
+    margin-top: 2em;
+}
+
+.layout-fourpage .img-container, .layout-twopage .img-container {
     background-repeat: no-repeat;
     margin: auto 0;
 }
@@ -136,11 +144,12 @@ body {
     display: none;
 }
 
-#album_rename_row {
+#album_rename_row, #page_edit_row {
     border-radius: .25em;
     background-color: #424242;
     margin-left: .01em;
     margin-bottom: 1em;
+    color: white;
 }
 
 #share_bar {
