@@ -87,6 +87,15 @@ class AlbumTest(TestCase):
         # Anonymous photo removal
         self.assertJSONError("/album/1/page/1/photo/1/remove/")
 
+        # Anonymous page adding
+        self.assertJSONError("/album/1/page/add/1/", {"layout": 1})
+
+        # Anonymous page removal
+        self.assertJSONError("/album/1/page/1/remove/")
+
+        # Anonymous layout list
+        self.assertJSONError("/layouts/")
+
         # Login
         response = self.client.post("/login/", {"username": "TestUser", "password": "irrelevant"})
         self.assertEquals(response.status_code, 302)
@@ -159,6 +168,19 @@ class AlbumTest(TestCase):
             "share_id": "fad201add0c32047f037f46e8a213d0d9213e54a"
         })
 
+        # Layout list
+        response = self.client.get("/layouts/")
+        self.assertJSONEqual(response.content, [
+            {
+                "name": "Test layout",
+                "id": 1
+            },
+            {
+                "name": "Smaller layout",
+                "id": 2
+            }
+        ])
+
         # Non-existent page
         self.assertJSONError("/album/1/page/0/")
 
@@ -173,6 +195,12 @@ class AlbumTest(TestCase):
 
         # Photo removal from nonexistent slot
         self.assertJSONError("/album/1/page/1/photo/9001/remove/")
+
+        # Page adding to a nonexistent album
+        self.assertJSONError("/album/9001/page/add/1/", {"layout": 1})
+
+        # Page removal from a nonexistent album
+        self.assertJSONError("/album/9001/page/1/remove/")
 
         # Changing layout with too many photos
         self.assertJSONError("/album/1/page/1/edit/", {"layout": 2})
@@ -206,7 +234,7 @@ class AlbumTest(TestCase):
         self.assertEquals(page.layout.pk, 1)
 
         # Photo adding with invalid data
-        self.assertJSONError("/album/1/page/1/photo/1/add/", {"invalid": "data"})
+        self.assertJSONError("/album/1/page/1/photo/4/add/", {"invalid": "data"})
 
         # Photo adding to out-of-bounds slot
         self.assertJSONError("/album/1/page/1/photo/0/add/", {"url": "http://example.com"})
@@ -222,6 +250,32 @@ class AlbumTest(TestCase):
         self.assertEquals(photo.num, 4)
         self.assertEquals(photo.page.num, 1)
         self.assertEquals(photo.page.album.id, 1)
+
+        # Page removal and page renumbering
+        old_page_2 = AlbumPage.objects.get(album__pk=1, num=2)
+        response = self.client.post("/album/1/page/1/remove/")
+        self.assertJSONRedirect(response, "/#album/1/page/1/")
+        old_page_2 = AlbumPage.objects.get(pk=old_page_2.pk)
+        self.assertEquals(old_page_2.num, 1)
+
+        # Page adding in-between
+        response = self.client.post("/album/1/page/add/1/", {"layout": 1})
+        self.assertJSONRedirect(response, "/#album/1/page/1/")
+        old_page_2 = AlbumPage.objects.get(pk=old_page_2.pk)
+        self.assertEquals(old_page_2.num, 2)
+
+        # Removing a nonexistent page
+        self.assertJSONError("/album/1/page/9001/remove/")
+
+        # Adding a page with invalid data
+        self.assertJSONError("/album/1/page/add/1/", {"invalid": "data"})
+
+        # Adding a page to invalid indexes
+        self.assertJSONError("/album/1/page/add/0/", {"layout": 1})
+        self.assertJSONError("/album/1/page/add/9001/", {"layout": 1})
+
+        # Adding a page with an invalid layout
+        self.assertJSONError("/album/1/page/add/1/", {"layout": 9001})
 
         # Log out
         response = self.client.get("/logout/")
@@ -298,6 +352,9 @@ class AlbumTest(TestCase):
         album = Album.objects.get(name="Dicta Collectanea")
         self.assertRedirects(response, "/#album/%d/" % album.pk)
 
+        # Removing the only page from an album
+        self.assertJSONError("/album/%d/page/1/remove/" % album.pk)
+
         # Renaming a nonexistent album
         self.assertJSONError("/album/9001/edit/", {"invalid": "data"})
 
@@ -318,6 +375,12 @@ class AlbumTest(TestCase):
 
         # Editing another user's album
         self.assertJSONError("/album/1/edit/", {"name": "Forbidden"})
+
+        # Adding a page to another user's album
+        self.assertJSONError("/album/1/page/add/1/", {"layout": 1})
+
+        # Removing a page from another user's album
+        self.assertJSONError("/album/1/page/1/remove/")
 
         # Layout change of another user's album
         self.assertJSONError("/album/1/page/1/edit/", {"layout": 1})

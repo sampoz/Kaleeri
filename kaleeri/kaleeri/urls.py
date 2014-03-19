@@ -17,6 +17,8 @@ urlpatterns = patterns(
     url(r'^album/(\d+)/([a-f0-9]{40})?/?$', 'gallery.views.show_album'),
     url(r'^album/(\d+)/edit/$', 'gallery.views.edit_album'),
     url(r'^album/(\d+)/page/(\d+)/edit/$', 'gallery.views.edit_page'),
+    url(r'^album/(\d+)/page/add/(\d+)/$', 'gallery.views.add_page'),
+    url(r'^album/(\d+)/page/(\d+)/remove/$', 'gallery.views.remove_page'),
     url(r'^album/(\d+)/page/(\d+)/photo/(\d+)/add/', 'gallery.views.add_photo'),
     url(r'^album/(\d+)/page/(\d+)/photo/(\d+)/remove/', 'gallery.views.remove_photo'),
     url(r'^album/(\d+)/page/(\d+)/([a-f0-9]{40})?/?$', 'gallery.views.show_page'),

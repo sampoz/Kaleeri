@@ -359,6 +359,95 @@ def remove_photo(request, album_id, page_num, photo_num):
 
 
 @render_to_json()
+def add_page(request, album_id, index):
+    if not request.user.is_authenticated():
+        return {"error": "Forbidden"}
+
+    user = request.user.get_username()
+    try:
+        album = Album.objects.get(pk=album_id)
+    except ObjectDoesNotExist:
+        logger.info("User %s tried to add a page to the nonexistent album ID %d", user, int(album_id))
+        return {"error": "Invalid album"}
+
+    if not album.has_user_access(request.user):
+        logger.info("User %s tried to add a page to the album '%s' owned by another user", user, album.name)
+        return {"error": "Forbidden"}
+
+    if "layout" not in request.POST:
+        logger.info("User %s tried to add a page without a layout", user)
+        return {"error": "Missing layout"}
+
+    try:
+        layout = PageLayout.objects.get(id=request.POST["layout"])
+    except ObjectDoesNotExist:
+        logger.info("User %s tried to add a page with an invalid layout", user)
+        return {"error": "Invalid layout"}
+
+    # Indexes start at one for human readability, the page is inserted at the location and succeeding pages
+    # are pushed to a larger index
+    index = int(index)
+    if index == 0:
+        return {"error": "Invalid location (must be at least 1)"}
+
+    # For a 1-indexed list, valid slots are [1, num + 1]
+    page_count = AlbumPage.objects.filter(album=album).count()
+    if index > (page_count + 1):
+        return {"error": "Invalid location (must be at most %d)" % (page_count + 1)}
+
+    # If the location isn't `num + 1`, push the pages after the new one
+    if index != page_count + 1:
+        with transaction.atomic():
+            for page in AlbumPage.objects.filter(album=album, num__gt=index - 1).reverse():
+                page.num += 1
+                page.save()
+
+    page = AlbumPage(album=album, num=index, layout=layout)
+    page.save()
+
+    url = request.build_absolute_uri(reverse('home')) + '#album/%d/page/%d/' % (int(album_id), int(index))
+    return {"redirect": url}
+
+
+@render_to_json()
+def remove_page(request, album_id, page_num):
+    if not request.user.is_authenticated():
+        return {"error": "Forbidden"}
+
+    user = request.user.get_username()
+    try:
+        album = Album.objects.get(pk=album_id)
+    except ObjectDoesNotExist:
+        logger.info("User %s tried to remove a page from the nonexistent album ID %d", user, int(album_id))
+        return {"error": "Invalid album"}
+
+    if not album.has_user_access(request.user):
+        logger.info("User %s tried to remove a page from the album '%s' owned by another user", user, album.name)
+        return {"error": "Forbidden"}
+
+    try:
+        page = AlbumPage.objects.get(album=album, num=page_num)
+    except ObjectDoesNotExist:
+        logger.info("User %s tried to remove a nonexistent page %d from album '%s'", user, int(page_num), album.name)
+        return {"error": "Invalid page"}
+
+    if album.albumpage_set.count() == 1:
+        logger.info("User %s tried to remove the last page from album '%s'", user, album.name)
+        return {"error": "Cannot remove the last page - try removing the album"}
+
+    page.delete()
+
+    # Renumber pages
+    with transaction.atomic():
+        for page in AlbumPage.objects.filter(album=album, num__gt=page_num):
+            page.num -= 1
+            page.save()
+
+    url = request.build_absolute_uri(reverse('home')) + '#album/%d/page/1/' % int(album_id)
+    return {"redirect": url}
+
+
+@render_to_json()
 def list_layouts(request):
     # No reason for an unauthenticated user to see this
     if not request.user.is_authenticated():
