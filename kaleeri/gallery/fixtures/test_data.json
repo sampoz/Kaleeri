@@ -82,7 +82,8 @@
             "crop_w": 0,
             "num": 1,
             "crop_y": 0,
-            "page": 1
+            "page": 1,
+            "do_crop": false
         }
     },
     {
@@ -96,7 +97,8 @@
             "crop_w": 0,
             "num": 2,
             "crop_y": 0,
-            "page": 1
+            "page": 1,
+            "do_crop": false
         }
     },
     {
@@ -110,7 +112,8 @@
             "crop_w": 0,
             "num": 3,
             "crop_y": 0,
-            "page": 1
+            "page": 1,
+            "do_crop": false
         }
     },
     {
@@ -124,7 +127,8 @@
             "crop_w": 0,
             "num": 4,
             "crop_y": 0,
-            "page": 1
+            "page": 1,
+            "do_crop": false
         }
     },
     {
@@ -138,7 +142,8 @@
             "crop_w": 0,
             "num": 1,
             "crop_y": 0,
-            "page": 2
+            "page": 2,
+            "do_crop": false
         }
     },
     {
@@ -152,7 +157,8 @@
             "crop_w": 0,
             "num": 2,
             "crop_y": 0,
-            "page": 2
+            "page": 2,
+            "do_crop": false
         }
     },
     {
@@ -166,7 +172,8 @@
             "crop_w": 0,
             "num": 3,
             "crop_y": 0,
-            "page": 2
+            "page": 2,
+            "do_crop": false
         }
     },
     {
@@ -180,7 +187,8 @@
             "crop_w": 0,
             "num": 4,
             "crop_y": 0,
-            "page": 2
+            "page": 2,
+            "do_crop": false
         }
     },
     {
@@ -194,7 +202,8 @@
             "crop_w": 0,
             "num": 1,
             "crop_y": 0,
-            "page": 3
+            "page": 3,
+            "do_crop": false
         }
     },
     {
@@ -208,7 +217,8 @@
             "crop_w": 0,
             "num": 2,
             "crop_y": 0,
-            "page": 3
+            "page": 3,
+            "do_crop": false
         }
     },
     {
@@ -222,7 +232,8 @@
             "crop_w": 0,
             "num": 3,
             "crop_y": 0,
-            "page": 3
+            "page": 3,
+            "do_crop": false
         }
     },
     {
@@ -236,7 +247,8 @@
             "crop_w": 0,
             "num": 4,
             "crop_y": 0,
-            "page": 3
+            "page": 3,
+            "do_crop": false
         }
     },
     {
@@ -250,7 +262,8 @@
             "crop_w": 0,
             "num": 1,
             "crop_y": 0,
-            "page": 4
+            "page": 4,
+            "do_crop": false
         }
     },
     {
@@ -264,7 +277,8 @@
             "crop_w": 0,
             "num": 2,
             "crop_y": 0,
-            "page": 4
+            "page": 4,
+            "do_crop": false
         }
     },
     {
@@ -278,7 +292,8 @@
             "crop_w": 0,
             "num": 3,
             "crop_y": 0,
-            "page": 4
+            "page": 4,
+            "do_crop": false
         }
     },
     {
@@ -292,7 +307,8 @@
             "crop_w": 0,
             "num": 4,
             "crop_y": 0,
-            "page": 4
+            "page": 4,
+            "do_crop": false
         }
     },
     {
@@ -306,7 +322,8 @@
             "crop_w": 0,
             "num": 1,
             "crop_y": 0,
-            "page": 5
+            "page": 5,
+            "do_crop": false
         }
     },
     {
@@ -320,7 +337,8 @@
             "crop_w": 0,
             "num": 2,
             "crop_y": 0,
-            "page": 5
+            "page": 5,
+            "do_crop": false
         }
     },
     {
@@ -334,7 +352,8 @@
             "crop_w": 0,
             "num": 3,
             "crop_y": 0,
-            "page": 5
+            "page": 5,
+            "do_crop": false
         }
     },
     {
@@ -348,7 +367,8 @@
             "crop_w": 0,
             "num": 1,
             "crop_y": 0,
-            "page": 6
+            "page": 6,
+            "do_crop": false
         }
     },
     {
@@ -362,7 +382,8 @@
             "crop_w": 0,
             "num": 2,
             "crop_y": 0,
-            "page": 6
+            "page": 6,
+            "do_crop": false
         }
     },
     {
@@ -376,7 +397,8 @@
             "crop_w": 0,
             "num": 3,
             "crop_y": 0,
-            "page": 6
+            "page": 6,
+            "do_crop": false
         }
     },
     {

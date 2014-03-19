@@ -157,7 +157,8 @@ def create_album(request):
     if request.method == 'GET':
         form = AlbumForm()
         # Dynamically load the user's albums as possible choices for a parent album
-        form.base_fields['parent'] = forms.ModelChoiceField(queryset=Album.objects.filter(owner=request.user))
+        form.base_fields['parent'] = forms.ModelChoiceField(queryset=Album.objects.filter(owner=request.user),
+                                                            required=False)
         albums = [{"id": -1, "name": "No parent"}] \
                + [{"id": a.id, "name": a.name} for a in Album.objects.filter(owner=request.user)]
         return render_to_response("album/create.html", RequestContext(request, {'form': form, 'albums': albums}))
@@ -165,12 +166,12 @@ def create_album(request):
     # No DRY here, because Form instances should be considered immutable once initialized
     form = AlbumForm(request.POST)
     form.base_fields['parent'] = forms.ModelChoiceField(queryset=Album.objects.filter(owner=request.user),
-                                                        empty_label='(No parent)')
+                                                        empty_label='(No parent)', required=False)
 
     if not form.is_valid():
         albums = [{"id": -1, "name": "No parent"}] \
                + [{"id": a.id, "name": a.name} for a in Album.objects.filter(owner=request.user)]
-        logger.info("User %s tried to create album with invalid data", request.user.get_username())
+        logger.info("User %s tried to create album with invalid data: %s", request.user.get_username(), form.errors)
         return render_to_response('album/create.html', {'form': form, 'user': request.user, 'albums': albums})
 
     logger.info("Creating album '%s' for user %s", request.POST["name"], request.user.get_username())

@@ -4,7 +4,7 @@ from models import Album, AlbumPage, Photo, PageLayout
 
 class AlbumForm(ModelForm):
     layout = ModelChoiceField(queryset=PageLayout.objects.all(),
-                              help_text="The default layout for pages in this album", required=True)
+                              help_text="The layout of the first page in the album", required=True)
     class Meta:
         model = Album
         fields = ['name', 'parent']

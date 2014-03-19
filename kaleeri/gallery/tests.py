@@ -105,7 +105,8 @@ class AlbumTest(TestCase):
                     "name": "Test album",
                     "photos": 16,
                     "share_id": "fad201add0c32047f037f46e8a213d0d9213e54a",
-                    "subalbums": 1
+                    "subalbums": 1,
+                    "preview": "http://example.com"
                 }
             ]
         })
@@ -118,7 +119,8 @@ class AlbumTest(TestCase):
                     "name": "Subalbum",
                     "photos": 6,
                     "share_id": "3218478924830f8f5abb927c53771c2282dce554",
-                    "subalbums": 0
+                    "subalbums": 0,
+                    "preview": "http://example.com"
                 }
             ]
         }
@@ -129,6 +131,10 @@ class AlbumTest(TestCase):
         response = self.client.get("/album/1/")
         self.assertJSONEqual(response.content, {
             "parent": None,
+            "subalbums": [{
+                "id": 2,
+                "name": "Subalbum"
+            }],
             "id": 1,
             "owner": "TestUser",
             "name": "Test album",
@@ -143,10 +149,10 @@ class AlbumTest(TestCase):
         response = self.client.get("/album/1/page/1/")
         self.assertJSONEqual(response.content, {
             "photos": [
-                {"url": "http://example.com", "caption": "", "crop": [0, 0, 0, 0], "num": 1},
-                {"url": "http://example.com", "caption": "", "crop": [0, 0, 0, 0], "num": 2},
-                {"url": "http://example.com", "caption": "", "crop": [0, 0, 0, 0], "num": 3},
-                {"url": "http://example.com", "caption": "", "crop": [0, 0, 0, 0], "num": 4}
+                {"url": "http://example.com", "caption": "", "do_crop": False, "crop": [0, 0, 0, 0], "num": 1},
+                {"url": "http://example.com", "caption": "", "do_crop": False, "crop": [0, 0, 0, 0], "num": 2},
+                {"url": "http://example.com", "caption": "", "do_crop": False, "crop": [0, 0, 0, 0], "num": 3},
+                {"url": "http://example.com", "caption": "", "do_crop": False, "crop": [0, 0, 0, 0], "num": 4}
             ],
             "layout_class": "layout",
             "max_photos": 4,
@@ -210,10 +216,10 @@ class AlbumTest(TestCase):
         self.assertJSONError("/album/1/page/1/photo/2/add/", {"url": "http://example.com"})
 
         # Working photo adding
-        response = self.client.post("/album/1/page/1/photo/1/add/", add_photo_data)
+        response = self.client.post("/album/1/page/1/photo/4/add/", add_photo_data)
         self.assertJSONRedirect(response, "/#album/1/page/1/")
         photo = Photo.objects.get(url="http://example.com/new")
-        self.assertEquals(photo.num, 1)
+        self.assertEquals(photo.num, 4)
         self.assertEquals(photo.page.num, 1)
         self.assertEquals(photo.page.album.id, 1)
 
@@ -237,6 +243,7 @@ class AlbumTest(TestCase):
                 "id": 1,
                 "name": "Test album"
             },
+            "subalbums": None,
             "id": 2,
             "owner": "TestUser",
             "name": "Subalbum",
@@ -286,7 +293,7 @@ class AlbumTest(TestCase):
         self.assertEquals(response.status_code, 200) # 200 is only returned with invalid or no data
 
         # Actual album creation
-        response = self.client.post("/album/create/", {"name": "Dicta Collectanea", "layout": 1})
+        response = self.client.post("/album/create/", {"name": "Dicta Collectanea", "layout": 1, "parent": ""})
         self.assertEquals(Album.objects.filter(name="Dicta Collectanea").count(), 1)
         album = Album.objects.get(name="Dicta Collectanea")
         self.assertRedirects(response, "/#album/%d/" % album.pk)
