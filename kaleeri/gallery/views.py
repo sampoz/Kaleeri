@@ -379,7 +379,7 @@ def add_page(request, album_id, index):
         return {"error": "Missing layout"}
 
     try:
-        layout = PageLayout.objects.get(id=request.POST["layout"])
+        layout = PageLayout.objects.get(name=request.POST["layout"])
     except ObjectDoesNotExist:
         logger.info("User %s tried to add a page with an invalid layout", user)
         return {"error": "Invalid layout"}

@@ -24,6 +24,8 @@
         <a class="btn btn-default" id="album_rename_btn">Rename album</a>
         <a class="btn btn-default" id="page_edit_btn">Edit page</a>
         <a class="btn btn-default" id="remove_photos">Remove photos</a>
+        <a class="btn btn-default" onclick="Kaleeri.addPage()" id="page_add_btn">Add a Page page</a>
+        <a class="btn btn-default" onclick="Kaleeri.removePage()" id="page_add_btn">Remove a Page page</a>
         {{/if}}
         <a class="btn btn-default" onclick="Kaleeri.previousPage()" ><span class="glyphicon glyphicon-chevron-left"></span> Previous Page</a>
         <a class="btn btn-default" onclick="Kaleeri.nextPage()" >Next Page <span class="glyphicon glyphicon-chevron-right"></span></a>
@@ -56,6 +58,10 @@
     </div>
 
     <div id="album_content" class="{{ layout_class }}"></div>
+    <form>
+    <input type="hidden" value="{{ layout_class }}" name="layout" />
+    </form>
+
 </script>
 
 <script id="album_rename" type="text/x-handlebars-template">
