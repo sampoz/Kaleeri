@@ -370,6 +370,17 @@ Kaleeri.addPage = function(){
 
 Kaleeri.removePage = function(){
     console.log("tried to remove");
+    var albumNumber = /album\/(\d+)\//.exec(location.href)[1];
+    var pageNumber = /page\/(\d+)\//.exec(location.href)[1];
+    var csrf = getCookie('csrftoken');
+    $.ajax({
+        url : "album/" + albumNumber + "/page/" +parseInt(pageNumber)+"/remove/",
+        type : "POST",
+        setRequestHeader : csrf,
+        success : function (data) {
+        console.log(data);
+        location.reload();
+    }});
 };
 
 function csrfSafeMethod(method) {
