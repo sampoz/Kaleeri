@@ -271,7 +271,7 @@ Kaleeri.loadAlbumPage = function (albumId, pageNumber, shareId) {
                     }
 
                     $.getJSON('/layouts/', function (data) {
-                        $select = $row.find('select');
+                        var $select = $row.find('select');
                         $select.empty();
                         var option;
                         for (var i = 0; i < data.length; ++i) {

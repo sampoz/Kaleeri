@@ -157,6 +157,7 @@ def show_page(request, album_id, page_num, share_id=None):
 
 
 @login_required
+@ensure_csrf_cookie
 def create_album(request):
     if request.method == 'GET':
         form = AlbumForm()
