@@ -75,7 +75,7 @@ function initAddPhoto() {
     });
 
     $('#flickr_previous').click(function () {
-        if (page == 1) { return; }
+        if (currentPage == 1) { return; }
         loadFlickr(currentSearch, currentPage - 1);
     });
 
@@ -88,9 +88,13 @@ function initAddPhoto() {
         searchTimer = setTimeout(function () { loadFlickr($('#search').val(), 1) }, 500);
     });
 
-    $form = $("#album-form").find("form");
+    var $form = $("#album-form").find("form");
     $form.append('<input type="hidden" name="csrfmiddlewaretoken" value="' + getCookie('csrftoken') + '">');
     $form.find("input[type=submit]").click(function(e) {
+        var $do_crop = $('#do_crop');
+        if (!$do_crop.prop('checked')) {
+            $('input[name^=crop_]').val('0');
+        }
         Kaleeri.submitAjaxForm($form);
         e.preventDefault();
     });

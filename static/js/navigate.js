@@ -51,7 +51,6 @@ function loadHash() {
                 }
             };
         } else if (state.length == 2 || state.length == 3) {
-            // TODO: Separate album front page and single page views
             ret = {
                 view: "albumPhotos",
                 parameter: {
@@ -92,10 +91,16 @@ Kaleeri.submitAjaxForm = function (form) {
     var vals = {};
     $form.find("input:not([type=submit]), select").each(function (_, e) {
         e = $(e);
-        vals[e.attr('name')] = e.val();
+        if (e.attr('type') == 'checkbox') {
+            if (e.prop('checked')) {
+                vals[e.attr('name')] = true;
+            }
+        } else {
+            vals[e.attr('name')] = e.val();
+        }
     });
 
-    return Kaleeri.submitAjaxData(url, vals, $form);
+    Kaleeri.submitAjaxData(url, vals, $form);
 };
 
 Kaleeri.submitAjaxData = function (url, data, errorHolder) {
@@ -135,7 +140,6 @@ Kaleeri.previousPage = function () {
 };
 
 Kaleeri.loadFrontPage = function () {
-    // TODO: Actual front page for logged-in users
     Kaleeri.loadAlbums();
 };
 

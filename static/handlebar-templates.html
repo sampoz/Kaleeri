@@ -23,7 +23,6 @@
 
 <script id="album_view" type="text/x-handlebars-template">
     <div id="buttons" class="btn-group">
-        {{#if loggedIn}}<a class="btn btn-default" href="/album/create/">Create a new album</a>{{/if}}
         {{#if isOwner}}
         <a class="btn btn-default" id="album_rename_btn">Rename album</a>
         <a class="btn btn-default" id="page_edit_btn">Edit page</a>

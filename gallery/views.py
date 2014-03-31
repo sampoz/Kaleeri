@@ -309,7 +309,7 @@ def add_photo(request, album_id, page_num, photo_num):
 
     form = PhotoForm(request.POST)
     if not form.is_valid():
-        logger.info("User %s tried to add a photo with invalid data", request.user.get_username())
+        logger.info("User %s tried to add a photo with invalid data: %s", request.user.get_username(), form.errors)
         return {"error": "Invalid data"}
 
     photo = form.save(commit=False)
