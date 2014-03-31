@@ -31,8 +31,9 @@
         <a class="btn btn-default" id="page_remove_btn">Remove page</a>
         <a class="btn btn-default" id="remove_photos">Remove photos</a>
         {{/if}}
-        <a class="btn btn-default" onclick="Kaleeri.previousPage()" ><span class="glyphicon glyphicon-chevron-left"></span> Previous Page</a>
-        <a class="btn btn-default" onclick="Kaleeri.nextPage()" >Next Page <span class="glyphicon glyphicon-chevron-right"></span></a>
+        <a class="btn btn-default" href="/album/{{ id }}/order/">Order album</a>
+        <a class="btn btn-default" onclick="Kaleeri.previousPage()"><span class="glyphicon glyphicon-chevron-left"></span> Previous Page</a>
+        <a class="btn btn-default" onclick="Kaleeri.nextPage()">Next Page <span class="glyphicon glyphicon-chevron-right"></span></a>
     </div>
 
     <div id="share_bar" class="row">

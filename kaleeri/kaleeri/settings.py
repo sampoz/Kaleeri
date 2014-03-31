@@ -100,6 +100,9 @@ STATICFILES_DIRS = (
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 
+PAYMENT_SID = "selleri"
+PAYMENT_SECRET = "2e187259a15282fee3c9a59343ba87b3"
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,

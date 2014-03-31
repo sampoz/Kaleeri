@@ -1,10 +1,13 @@
 #!/usr/bin/env python
+import hashlib
 
 import json
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 from django.test import TestCase
 from gallery.utils import render_to_json
-from .models import Album, AlbumPage, PageLayout, Photo
+from kaleeri import settings
+from .models import Album, AlbumPage, PageLayout, Photo, Order
 
 
 class AlbumTest(TestCase):
@@ -384,6 +387,55 @@ class AlbumTest(TestCase):
 
         # Layout change of another user's album
         self.assertJSONError("/album/1/page/1/edit/", {"layout": 1})
+
+        # Album ordering
+        response = self.client.get("/album/%d/order/" % album.pk)
+        self.assertTemplateUsed(response, "order.html")
+
+        # Check that we get the correct hash from the view
+        response = self.client.get("/order/checksum/1/2/3/")
+        to_hash = "pid=%d&sid=%s&amount=%d&token=%s" % (1, settings.PAYMENT_SID, 2 * 3, settings.PAYMENT_SECRET)
+        correct_hash = hashlib.md5(to_hash).hexdigest()
+        self.assertJSONEqual(response.content, {"checksum": correct_hash})
+
+        # Variables for order callbacks
+        order_id = Order.objects.order_by("-id")[0].id
+        ref = 1
+        correct_hash = hashlib.md5("pid=%d&ref=%d&token=%s" % (order_id, ref, settings.PAYMENT_SECRET)).hexdigest()
+        wrong_hash = "no"
+
+        # Order callback: success
+        response = self.client.get("/order/success/?pid=%d&ref=%d&checksum=%s" % (order_id, ref, correct_hash))
+        self.assertContains(response, 'class="success"')
+        response = self.client.get("/order/success/?pid=%d&ref=%d&checksum=%s" % (order_id, ref, wrong_hash))
+        self.assertRedirects(response, "/")
+
+        # Order callback: cancel
+        response = self.client.get("/order/cancel/?pid=%d&ref=%d&checksum=%s" % (order_id, ref, correct_hash))
+        self.assertContains(response, 'class="error"')
+        # Re-run the request as the Order gets removed and the view branches differently, even though the
+        # result is the same
+        response = self.client.get("/order/cancel/?pid=%d&ref=%d&checksum=%s" % (order_id, ref, correct_hash))
+        self.assertContains(response, 'class="error"')
+        response = self.client.get("/order/cancel/?pid=%d&ref=%d&checksum=%s" % (order_id, ref, wrong_hash))
+        self.assertRedirects(response, "/")
+
+        # Generate a new order for the error callback
+        self.client.get("/album/%d/order/" % album.pk)
+        order_id = Order.objects.order_by("-id")[0].id
+        correct_hash = hashlib.md5("pid=%d&ref=%d&token=%s" % (order_id, ref, settings.PAYMENT_SECRET)).hexdigest()
+
+        # Order callback: error
+        response = self.client.get("/order/error/?pid=%d&ref=%d&checksum=%s" % (order_id, ref, correct_hash))
+        self.assertContains(response, 'class="error"')
+        # Again re-running on purpose
+        response = self.client.get("/order/error/?pid=%d&ref=%d&checksum=%s" % (order_id, ref, correct_hash))
+        self.assertContains(response, 'class="error"')
+        response = self.client.get("/order/error/?pid=%d&ref=%d&checksum=%s" % (order_id, ref, wrong_hash))
+        self.assertRedirects(response, "/")
+
+        # Check that the object does not exist anymore
+        self.assertRaises(Order.DoesNotExist, Order.objects.get, id=order_id)
 
         # Profile page
         response = self.client.get("/profile/")

@@ -6,8 +6,6 @@ admin.autodiscover()
 urlpatterns = patterns(
     '',
     url(r'^$', 'gallery.views.home', name='home'),
-    url(r'^admin/', include(admin.site.urls)),
-    url(r'^accounts/', include('allaccess.urls')),
     url(r'^login/$', 'django.contrib.auth.views.login', name="Kaleeri Login"),
     url(r'^register/$', 'gallery.views.register', name="Kaleeri Register"),
     url(r'^login/$', 'django.contrib.auth.views.login', name="Kaleeri Login"),
@@ -26,6 +24,12 @@ urlpatterns = patterns(
     url(r'^album/list/$', 'gallery.views.list_albums'),
     url(r'^album/create/$', 'gallery.views.create_album'),
     url(r'^add/$', 'gallery.views.add_photo'),
-    url(r'^order/$', 'gallery.views.order'),
-    url(r'^layouts/$', 'gallery.views.list_layouts')
+    url(r'^album/(\d+)/order/$', 'gallery.views.order'),
+    url(r'^order/checksum/(\d+)/(\d+)/(\d+)/$', 'gallery.views.order_checksum'),
+    url(r'^order/success/$', 'gallery.views.order_success'),
+    url(r'^order/cancel/$', 'gallery.views.order_cancel'),
+    url(r'^order/error/$', 'gallery.views.order_error'),
+    url(r'^layouts/$', 'gallery.views.list_layouts'),
+    url(r'^admin/', include(admin.site.urls)),
+    url(r'^accounts/', include('allaccess.urls'))
 )

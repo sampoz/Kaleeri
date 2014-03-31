@@ -1,17 +1,38 @@
 {% extends "base.html" %}
+{% load staticfiles %}
+{% block extrajs %}<script src="{% static 'js/order.js' %}"></script>{% endblock %}
 {% block content %}
+    <div id="base">
+        <h1>Order album</h1>
 
-    <form action="http://payments.webcourse.niksula.hut.fi/pay/" method="POST">
-    <input type="hidden" name="pid" value="{{ payment_id }}" />
-    <input type="hidden" name="sid" value="{{ seller_id }}" />
-    <input type="hidden" name="success_url" value="{{ success_url }}" />
-    <input type="hidden" name="cancel_url" value="{{ cancel_url }}" />
-    <input type="hidden" name="error_url" value="{{ error_url }}" />
-    <input type="hidden" name="checksum" value="{{ checksum }}" />
+        <p>
+            You are ordering the album {{ album.name }}. Please enter the price you are willing to pay for it and the amount of albums
+            you wish to order.
+        </p>
 
-    <label for="id_amount">Amount</label>
-    <input type="text" id="id_amount" name="amount" value="0" />
-    <input type="submit" value="Accept Payment"/>
-</form>
+        <form action="http://payments.webcourse.niksula.hut.fi/pay/" method="POST">
+            <input type="hidden" name="pid" id="pid" value="{{ payment_id }}" />
+            <input type="hidden" name="sid" value="{{ sid }}" />
+            <input type="hidden" name="success_url" value="{{ success_url }}">
+            <input type="hidden" name="cancel_url" value="{{ cancel_url }}">
+            <input type="hidden" name="error_url" value="{{ error_url }}">
+            <input type="hidden" name="checksum" id="checksum" value="">
 
+            <div>
+                <label>
+                    Amount:
+                    <input type="text" name="amount" id="amount" value="1">
+                </label>
+            </div>
+
+            <div>
+                <label>
+                    Price per album:
+                    <input type="text" name="price" id="price" value="10">
+                </label>
+            </div>
+
+            <input type="submit" value="Order">
+        </form>
+    </div>
 {% endblock content %}

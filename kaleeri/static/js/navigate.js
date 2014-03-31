@@ -218,7 +218,8 @@ Kaleeri.loadAlbumPage = function (albumId, pageNumber, shareId) {
                 $.extend(data, {
                     "currentUser": Kaleeri.currentUser || null,
                     "loggedIn": !!Kaleeri.currentUser,
-                    "isOwner": Kaleeri.currentUser === Kaleeri.currentAlbum.owner
+                    "isOwner": Kaleeri.currentUser === Kaleeri.currentAlbum.owner,
+                    "id": Kaleeri.currentAlbum.id
                 });
 
                 var html = template(data);

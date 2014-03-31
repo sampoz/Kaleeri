@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
+import hashlib
 import logging
-from unicodedata import decimal
-from django.core.context_processors import csrf
+
 from django import forms
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
@@ -14,14 +14,13 @@ from django.shortcuts import render_to_response, render, redirect
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
+
 from .forms import AlbumForm
 from .forms import PhotoForm
-from .models import Album, Photo
-from .models import Album, Order
+from kaleeri.settings import PAYMENT_SECRET, PAYMENT_SID
+from .models import Album, Photo, Order
 from .utils import render_to_json
-from models import AlbumPage
-from models import PageLayout
-import md5
+from models import AlbumPage, PageLayout
 
 
 logger = logging.getLogger(__name__)
@@ -470,22 +469,65 @@ def user_account(request):
 
 
 @login_required
-def order(request):
-    secret = "2e187259a15282fee3c9a59343ba87b3"
-    sid = "selleri"
+def order(request, album_id):
     if request.method == "GET":
-        order = Order()
-        order.album = Album.objects.get(pk=int(request.GET.get("album", "")))
-        order.price = 0
-        order.save()
+        order_ = Order()
+        order_.album = Album.objects.get(pk=album_id)
+        order_.price = 0
+        order_.save()
 
-        checksumstr = "pid=%s&sid=%s&amount=%s&token=%s"%(order.id, sid, order.price, secret)
-        m = md5.new(checksumstr)
-        logger.info(checksumstr)
-        return render_to_response("order.html", {'payment_id': order.id,
-                                          'seller_id': sid,
-                                          'success_url': request.build_absolute_uri(),
-                                          'cancel_url': request.build_absolute_uri(),
-                                          'error_url': request.build_absolute_uri(),
-                                          'checksum': m.hexdigest()})
+        return render_to_response("order.html", {
+            'album': order_.album,
+            'payment_id': order_.id,
+            'sid': "selleri",
+            'success_url': request.build_absolute_uri(reverse(order_success)),
+            'cancel_url': request.build_absolute_uri(reverse(order_cancel)),
+            'error_url': request.build_absolute_uri(reverse(order_error))
+        })
 
+
+@login_required
+@render_to_json()
+def order_checksum(request, order_id, price, amount):
+    secret = PAYMENT_SECRET
+    sid = PAYMENT_SID
+    checksumstr = "pid=%s&sid=%s&amount=%d&token=%s" % (order_id, sid, int(price) * int(amount), secret)
+    m = hashlib.md5(checksumstr)
+    return {"checksum": m.hexdigest()}
+
+
+def order_success(request):
+    order_id = request.GET.get('pid')
+    checksum = hashlib.md5("pid=%s&ref=%s&token=%s" % (order_id, request.GET.get('ref'), PAYMENT_SECRET)).hexdigest()
+    if checksum != request.GET.get('checksum'):
+        logging.warn("Invalid order success request, expected checksum %s but got %s", checksum, request.GET.get('checksum'))
+        return redirect('/')
+    return render_to_response("index.html", {'success': "Your order has been received!", 'user': request.user})
+
+
+def order_cancel(request):
+    order_id = request.GET.get('pid')
+    checksum = hashlib.md5("pid=%s&ref=%s&token=%s" % (order_id, request.GET.get('ref'), PAYMENT_SECRET)).hexdigest()
+    if checksum != request.GET.get('checksum'):
+        logging.warn("Invalid order cancel request, expected checksum %s but got %s", checksum, request.GET.get('checksum'))
+        return redirect('/')
+    try:
+        order = Order.objects.get(id=order_id)
+        order.delete()
+    except ObjectDoesNotExist:
+        pass # Probably reloading or going back in history, just show the error again
+    return render_to_response("index.html", {'error': "Your order has been canceled!", 'user': request.user})
+
+
+def order_error(request):
+    order_id = request.GET.get('pid')
+    checksum = hashlib.md5("pid=%s&ref=%s&token=%s" % (order_id, request.GET.get('ref'), PAYMENT_SECRET)).hexdigest()
+    if checksum != request.GET.get('checksum'):
+        logging.warn("Invalid order error request, expected checksum %s but got %s", checksum, request.GET.get('checksum'))
+        return redirect('/')
+    try:
+        order = Order.objects.get(id=order_id)
+        order.delete()
+    except ObjectDoesNotExist:
+        pass
+    return render_to_response("index.html", {'error': "An error happened while processing your order!", 'user': request.user})

@@ -1,11 +1,22 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 {% block content %}
-{% if not user.is_authenticated %}
     <div id="base">
+    {% if error %}
+        <div class="error">
+            {{ error }}
+        </div>
+    {% elif success %}
+        <div class="success">
+            {{ success }}
+        </div>
+    {% endif %}
+
+{% if not user.is_authenticated %}
         <div id="spinner">
             <img src="{% static 'img/ajax-loader.gif' %}"> Loading...
         </div>
+
         <div id="content-placeholder">
             <h1>Welcome to Kaleeri</h1>
             <p>
@@ -20,22 +31,19 @@
                 Facebook login and sweet Unicode emojis!
             </p>
        </div>
-    </div>
 
 {% else %}
 
-    {# Album view #}
-    <div id="base">
         <div id="albums" class="logged-in">
             <div id="spinner"><img src="{% static 'img/ajax-loader.gif' %}"> Loading...</div>
             <div id="content-placeholder"></div>
         </div>
-    </div>
-    <script>
-        Kaleeri = Kaleeri || {};
-        Kaleeri.currentUser = "{{ user.username|escapejs }}";
-    </script>
 
+        <script>
+            Kaleeri = Kaleeri || {};
+            Kaleeri.currentUser = "{{ user.username|escapejs }}";
+        </script>
 {% endif %}
 
+    </div>
 {% endblock content %}

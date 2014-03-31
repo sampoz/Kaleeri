@@ -87,5 +87,6 @@ class Photo(models.Model):
 
 class Order(models.Model):
     album = models.ForeignKey(Album, help_text="The album that was bought")
-    price = models.DecimalField(decimal_places=2, max_digits=2, blank=True, help_text="Price of this order")
-    seller_id = models.TextField(help_text="Seller id used in transaction")
+    price = models.DecimalField(decimal_places=2, max_digits=2, blank=True, help_text="The price of this order")
+    seller_id = models.TextField(help_text="The seller ID used in transaction")
+    paid = models.BooleanField(default=False, blank=False, help_text="Whether or not the order is paid for")

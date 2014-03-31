@@ -41,8 +41,8 @@ body {
 }
 
 #base {
-    margin: 0 auto;
-    max-width: 80%;
+    margin: 0 2.25em;
+    max-width: 90%;
 }
 
 #buttons {
@@ -223,6 +223,16 @@ body {
     margin: .5em 0;
     padding-left: .25em;
     background-color: #e33;
+    color: white;
+    line-height: 2;
+    font-weight: bold;
+    border-radius: .25em;
+}
+
+.success {
+    margin: .5em 0;
+    padding-left: .25em;
+    background-color: #3a3;
     color: white;
     line-height: 2;
     font-weight: bold;
