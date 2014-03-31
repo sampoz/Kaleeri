@@ -26,5 +26,6 @@ urlpatterns = patterns(
     url(r'^album/list/$', 'gallery.views.list_albums'),
     url(r'^album/create/$', 'gallery.views.create_album'),
     url(r'^add/$', 'gallery.views.add_photo'),
+    url(r'^order/$', 'gallery.views.order'),
     url(r'^layouts/$', 'gallery.views.list_layouts')
 )

@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
 import logging
+from unicodedata import decimal
+from django.core.context_processors import csrf
 from django import forms
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
@@ -15,9 +17,11 @@ from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
 from .forms import AlbumForm
 from .forms import PhotoForm
 from .models import Album, Photo
+from .models import Album, Order
 from .utils import render_to_json
 from models import AlbumPage
 from models import PageLayout
+import md5
 
 
 logger = logging.getLogger(__name__)
@@ -463,3 +467,25 @@ def list_layouts(request):
 @login_required
 def user_account(request):
     return render_to_response('registration/userAccount.html', {"user": request.user})
+
+
+@login_required
+def order(request):
+    secret = "2e187259a15282fee3c9a59343ba87b3"
+    sid = "selleri"
+    if request.method == "GET":
+        order = Order()
+        order.album = Album.objects.get(pk=int(request.GET.get("album", "")))
+        order.price = 0
+        order.save()
+
+        checksumstr = "pid=%s&sid=%s&amount=%s&token=%s"%(order.id, sid, order.price, secret)
+        m = md5.new(checksumstr)
+        logger.info(checksumstr)
+        return render_to_response("order.html", {'payment_id': order.id,
+                                          'seller_id': sid,
+                                          'success_url': request.build_absolute_uri(),
+                                          'cancel_url': request.build_absolute_uri(),
+                                          'error_url': request.build_absolute_uri(),
+                                          'checksum': m.hexdigest()})
+

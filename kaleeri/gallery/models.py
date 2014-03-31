@@ -83,3 +83,9 @@ class Photo(models.Model):
     class Meta:
         ordering = ('page', 'num')
         unique_together = ('page', 'num')
+
+
+class Order(models.Model):
+    album = models.ForeignKey(Album, help_text="The album that was bought")
+    price = models.DecimalField(decimal_places=2, max_digits=2, blank=True, help_text="Price of this order")
+    seller_id = models.TextField(help_text="Seller id used in transaction")
