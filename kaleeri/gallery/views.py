@@ -74,6 +74,7 @@ def list_albums(request, parent=None, share_id=None):
                 "share_id": album.share_id,
                 "subalbums": album.subalbums,
                 "preview": Photo.objects.filter(page__album=album).first().url
+                if Photo.objects.filter(page__album=album).count() > 0 else None
             } for album in albums
         ]
     }
@@ -160,7 +161,7 @@ def create_album(request):
         form.base_fields['parent'] = forms.ModelChoiceField(queryset=Album.objects.filter(owner=request.user),
                                                             required=False)
         albums = [{"id": -1, "name": "No parent"}] \
-               + [{"id": a.id, "name": a.name} for a in Album.objects.filter(owner=request.user)]
+            + [{"id": a.id, "name": a.name} for a in Album.objects.filter(owner=request.user)]
         return render_to_response("album/create.html", RequestContext(request, {'form': form, 'albums': albums}))
 
     # No DRY here, because Form instances should be considered immutable once initialized
@@ -170,7 +171,7 @@ def create_album(request):
 
     if not form.is_valid():
         albums = [{"id": -1, "name": "No parent"}] \
-               + [{"id": a.id, "name": a.name} for a in Album.objects.filter(owner=request.user)]
+            + [{"id": a.id, "name": a.name} for a in Album.objects.filter(owner=request.user)]
         logger.info("User %s tried to create album with invalid data: %s", request.user.get_username(), form.errors)
         return render_to_response('album/create.html', {'form': form, 'user': request.user, 'albums': albums})
 
@@ -379,7 +380,7 @@ def add_page(request, album_id, index):
         return {"error": "Missing layout"}
 
     try:
-        layout = PageLayout.objects.get(name=request.POST["layout"])
+        layout = PageLayout.objects.get(id=request.POST["layout"])
     except ObjectDoesNotExist:
         logger.info("User %s tried to add a page with an invalid layout", user)
         return {"error": "Invalid layout"}

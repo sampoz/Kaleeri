@@ -95,7 +95,7 @@ Kaleeri.submitAjaxForm = function (form) {
         vals[e.attr('name')] = e.val();
     });
 
-    var ret = Kaleeri.submitAjaxData(url, vals, $form);
+    return Kaleeri.submitAjaxData(url, vals, $form);
 };
 
 Kaleeri.submitAjaxData = function (url, data, errorHolder) {
@@ -261,6 +261,50 @@ Kaleeri.loadAlbumPage = function (albumId, pageNumber, shareId) {
                     }
                 });
 
+                $content.find("#page_add_btn").click(function () {
+                    var $row = $content.find("#page_add_row");
+                    if ($row.length > 0) {
+                        $row.remove();
+                        $(this).text('Add page');
+                        return;
+                    }
+
+                    $.getJSON('/layouts/', function (data) {
+                        $select = $row.find('select');
+                        $select.empty();
+                        var option;
+                        for (var i = 0; i < data.length; ++i) {
+                            $option = $(document.createElement('option'));
+                            $option.val(data[i].id);
+                            $option.text(data[i].name);
+                            $select.append($option);
+                        }
+                    });
+
+                    $(this).text('Cancel adding');
+                    var template = Handlebars.compile(Kaleeri.templates.page_add);
+                    var data = {
+                        id: albumId,
+                        page: pageNumber,
+                        nextPage: pageNumber + 1
+                    };
+                    var html = template(data);
+                    $content.find("#share_bar").before(html);
+                    $row = $('#page_add_row');
+                    var $btns = $row.find("a");
+                    $btns.click(function (e) {
+                        var url = $(this).attr('href');
+                        Kaleeri.submitAjaxData(url, {"layout": $row.find("select").val()}, $row);
+                        e.preventDefault();
+                    });
+                });
+
+                $content.find("#page_remove_btn").click(function () {
+                    var ret = confirm("Are you sure you want to remove the page?");
+                    if (!ret) { return; }
+                    Kaleeri.submitAjaxData("/album/" + albumId + "/page/" + pageNumber + "/remove/", $("#content-placeholder"));
+                });
+
                 $content.find("#page_edit_btn").click(function () {
                     var $row = $content.find("#page_edit_row");
                     if ($row.length > 0) {
@@ -332,7 +376,7 @@ Kaleeri.loadAlbumPage = function (albumId, pageNumber, shareId) {
                 }
 
 
-                $album_content = $('#album_content').empty();
+                var $album_content = $('#album_content').empty();
                 for (i = 1; i <= data.max_photos; ++i) {
                     photo_map[i].album = albumId;
                     photo_map[i].page = pageNumber;
@@ -345,88 +389,12 @@ Kaleeri.loadAlbumPage = function (albumId, pageNumber, shareId) {
                     var csrf = getCookie('csrftoken');
                     var url = '/album/' + albumId + '/page/' + pageNumber + '/photo/' + img + '/remove/';
                     var data = {csrfmiddlewaretoken: csrf};
-                    var ret = Kaleeri.submitAjaxData(url, data, $content);
+                    Kaleeri.submitAjaxData(url, data, $content);
                 });
             });
         });
     });
 };
-
-Kaleeri.addPage = function(){
-    console.log("tried to add");
-    var albumNumber = /album\/(\d+)\//.exec(location.href)[1];
-    var pageNumber = /page\/(\d+)\//.exec(location.href)[1];
-    var csrf = getCookie('csrftoken');
-    $.ajax({
-        url : "album/" + albumNumber + "/page/add/" +(parseInt(pageNumber)+1)+ "/",
-        type : "POST",
-        data : {'layout':'Four per page'},
-        setRequestHeader : csrf,
-        success : function (data) {
-        console.log(data);
-        location.reload();
-    }});
-};
-
-Kaleeri.removePage = function(){
-    console.log("tried to remove");
-    var albumNumber = /album\/(\d+)\//.exec(location.href)[1];
-    var pageNumber = /page\/(\d+)\//.exec(location.href)[1];
-    var csrf = getCookie('csrftoken');
-    $.ajax({
-        url : "album/" + albumNumber + "/page/" +parseInt(pageNumber)+"/remove/",
-        type : "POST",
-        setRequestHeader : csrf,
-        success : function (data) {
-        console.log(data);
-        location.reload();
-    }});
-};
-
-function csrfSafeMethod(method) {
-    // these HTTP methods do not require CSRF protection
-    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-}
-function sameOrigin(url) {
-    // test that a given url is a same-origin URL
-    // url could be relative or scheme relative or absolute
-    var host = document.location.host; // host + port
-    var protocol = document.location.protocol;
-    var sr_origin = '//' + host;
-    var origin = protocol + sr_origin;
-    // Allow absolute or scheme relative URLs to same origin
-    return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
-        (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
-        // or any other URL that isn't scheme relative or absolute i.e relative.
-        !(/^(\/\/|http:|https:).*/.test(url));
-}
-$.ajaxSetup({
-    beforeSend: function(xhr, settings) {
-        if (!csrfSafeMethod(settings.type) && sameOrigin(settings.url)) {
-            // Send the token to same-origin, relative URLs only.
-            // Send the token only if the method warrants CSRF protection
-            // Using the CSRFToken value acquired earlier
-            xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
-        }
-    }
-});
-
-Kaleeri.getCookie = function (name) {
-    var cookieValue = null;
-    if (document.cookie && document.cookie != '') {
-        var cookies = document.cookie.split(';');
-        for (var i = 0; i < cookies.length; i++) {
-            var cookie = jQuery.trim(cookies[i]);
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
-
 
 $(function () {
     $(document.createElement("div")).load(
@@ -446,3 +414,27 @@ $(function () {
         }
     );
 });
+
+/* From the Django documentation: https://docs.djangoproject.com/en/dev/ref/contrib/csrf/#ajax */
+function csrfSafeMethod(method) {
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+
+function sameOrigin(url) {
+    var host = document.location.host;
+    var protocol = document.location.protocol;
+    var sr_origin = '//' + host;
+    var origin = protocol + sr_origin;
+    return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+        (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+        !(/^(\/\/|http:|https:).*/.test(url));
+}
+
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && sameOrigin(settings.url)) {
+            xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+        }
+    }
+});
+/* End of Django documentation snippet */

@@ -144,7 +144,7 @@ body {
     display: none;
 }
 
-#album_rename_row, #page_edit_row {
+#album_rename_row, #page_edit_row, #page_add_row {
     border-radius: .25em;
     background-color: #424242;
     margin-left: .01em;

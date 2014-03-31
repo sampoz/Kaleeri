@@ -23,9 +23,9 @@
         {{#if isOwner}}
         <a class="btn btn-default" id="album_rename_btn">Rename album</a>
         <a class="btn btn-default" id="page_edit_btn">Edit page</a>
+        <a class="btn btn-default" id="page_add_btn">Add a page</a>
+        <a class="btn btn-default" id="page_remove_btn">Remove page</a>
         <a class="btn btn-default" id="remove_photos">Remove photos</a>
-        <a class="btn btn-default" onclick="Kaleeri.addPage()" id="page_add_btn">Add a Page page</a>
-        <a class="btn btn-default" onclick="Kaleeri.removePage()" id="page_add_btn">Remove a Page page</a>
         {{/if}}
         <a class="btn btn-default" onclick="Kaleeri.previousPage()" ><span class="glyphicon glyphicon-chevron-left"></span> Previous Page</a>
         <a class="btn btn-default" onclick="Kaleeri.nextPage()" >Next Page <span class="glyphicon glyphicon-chevron-right"></span></a>
@@ -75,9 +75,25 @@
     </div>
 </script>
 
+<script id="page_add" type="text/x-handlebars-template">
+    <div class="row" id="page_add_row">
+        <div class="col-md-3">
+            <label>
+                Layout:
+                <select></select>
+            </label>
+        </div>
+        <div class="col-md-9">
+            <a href="/album/{{ id }}/page/add/{{ page }}/" class="btn btn-default">Before this page</a>
+            <a href="/album/{{ id }}/page/add/{{ nextPage }}/" class="btn btn-default">After this page</a>
+        </div>
+    </div>
+</script>
+
 <script id="page_edit" type="text/x-handlebars-template">
     <div class="row" id="page_edit_row">
         <div class="col-md-12">
+            <a href="#/album/{{ id }}/page/{{ page }}/remove/">Remove page</a>
             <form action="/album/{{ id }}/page/{{ page }}/edit/" method="post">
                 <label>Page layout: <select name="layout"><option value="">Loading...</option></select></label>
                 <input type="submit" class="btn btn-default" value="Change layout">
