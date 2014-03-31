@@ -157,7 +157,7 @@ def show_page(request, album_id, page_num, share_id=None):
 
 
 @login_required
-@ensure_csrf_cookie
+@csrf_protect
 def create_album(request):
     if request.method == 'GET':
         form = AlbumForm()
@@ -177,7 +177,7 @@ def create_album(request):
         albums = [{"id": -1, "name": "No parent"}] \
             + [{"id": a.id, "name": a.name} for a in Album.objects.filter(owner=request.user)]
         logger.info("User %s tried to create album with invalid data: %s", request.user.get_username(), form.errors)
-        return render_to_response('album/create.html', {'form': form, 'user': request.user, 'albums': albums})
+        return render_to_response('album/create.html', RequestContext(request, {'form': form, 'user': request.user, 'albums': albums}))
 
     logger.info("Creating album '%s' for user %s", request.POST["name"], request.user.get_username())
     album = form.save(commit=False)
