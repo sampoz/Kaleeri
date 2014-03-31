@@ -5,9 +5,13 @@
     <div class="row">
         {{#albums}}
             <div class="col-md-3">
-                <div class="img-holder">
+                <div class="img-holder{{#unless preview}} missing{{/unless}}">
                     <a href="#album/{{id}}/page/1">
+                        {{#if preview}}
                         <img src="{{preview}}" alt="{{name}}">
+                        {{else}}
+                        No pictures in the album yet!
+                        {{/if}}
                     </a>
                 </div>
                 <a href="#album/{{id}}/page/1">{{name}}</a>

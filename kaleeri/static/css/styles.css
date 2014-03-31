@@ -9,7 +9,7 @@
     padding-top: 1em;
 }
 
-#topic > a, h1 {
+#topic > a, h1, h2 {
     color: #FFDEAD;
 }
 
