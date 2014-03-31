@@ -1,1 +1,1 @@
-web: gunicorn kaleeri.kaleeri.wsgi
+web: gunicorn kaleeri.wsgi
