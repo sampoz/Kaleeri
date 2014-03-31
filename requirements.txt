@@ -5,6 +5,7 @@ dj-static==0.0.5
 django-all-access==0.5.1
 gunicorn==18.0
 oauthlib==0.6.1
+psycopg2==2.5.2
 pycrypto==2.6.1
 pystache==0.5.3
 requests==2.2.1
