@@ -4,9 +4,9 @@ http://kaleeri.herokuapp.com
 
 ## Students:
 
-* Anssi Matti Helin, 84154D
-* Sampsa Laapotti, 293545
-* Osmo Maksimainen, 84706E
+* Anssi Matti Helin
+* Sampsa Laapotti
+* Osmo Maksimainen
 
 ## Features
 
